@@ -7,7 +7,7 @@
 <script src="https://unpkg.com/@azure/msal-browser@3.10.0/lib/msal-browser.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap');
-
+ 
 :root {
   --ink:#16140F; --cream:#FAF8F3; --gold:#B8955A; --gold-light:#D4B483;
   --muted:#7A7570; --border:#E2DDD6; --surface:#F5F2EC; --white:#FFFFFF;
@@ -15,7 +15,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
-
+ 
 /* ── LOGIN SCREEN ── */
 .login-screen{
   min-height:100vh;display:flex;flex-direction:column;
@@ -63,11 +63,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   min-height:1.2em;
 }
 .login-status.error{color:#F09595;}
-
+ 
 /* ── APP SHELL ── */
 .app-shell{display:none;}
 .shell{display:grid;grid-template-columns:360px 1fr;min-height:100vh;}
-
+ 
 /* ── LEFT ── */
 .left{background:var(--green-dark);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
 .left-header{padding:1.5rem 2rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;}
@@ -80,7 +80,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .sync-dot.syncing{background:var(--gold);animation:pulse 1s ease-in-out infinite;}
 .sync-dot.error{background:#8B3A2A;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
+ 
 .steps{padding:1.25rem 2rem;flex:1;}
 .step-item{display:flex;gap:1rem;align-items:flex-start;padding:0.65rem 0;cursor:pointer;opacity:0.4;transition:opacity 0.2s;}
 .step-item.active{opacity:1;}.step-item.done{opacity:0.65;}.step-item:hover{opacity:0.8;}
@@ -92,7 +92,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .step-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:300;color:rgba(255,255,255,0.65);}
 .step-item.active .step-name{color:var(--white);}
 .step-connector{width:1px;height:16px;background:rgba(255,255,255,0.07);margin-left:calc(2rem + 12px);}
-
+ 
 /* ITQ list in sidebar */
 .itq-list-header{padding:0.75rem 2rem 0.5rem;font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.25);letter-spacing:0.3em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
 .itq-list{padding:0 1rem 1rem;max-height:220px;overflow-y:auto;}
@@ -105,20 +105,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .status-sent{background:rgba(186,117,23,0.15);color:var(--gold);}
 .status-confirmed{background:rgba(45,106,79,0.15);color:#5DCAA5;}
 .status-lost{background:rgba(139,58,42,0.15);color:#F09595;}
-
+ 
 .left-preview{margin:0 1.25rem 1.25rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;}
 .lp-id{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.3rem;}
 .lp-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:var(--white);margin-bottom:0.65rem;line-height:1.3;}
 .lp-rows{display:flex;flex-direction:column;gap:0.3rem;}
 .lp-row{display:flex;justify-content:space-between;font-size:0.68rem;}
 .lp-key{color:rgba(255,255,255,0.3);}.lp-val{color:rgba(255,255,255,0.65);font-weight:500;}
-
+ 
 /* ── RIGHT ── */
 .right{padding:3rem 3rem 6rem;max-width:720px;}
 .step-panel{display:none;}.step-panel.active{display:block;}
 .panel-eyebrow{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.4em;text-transform:uppercase;margin-bottom:0.75rem;}
 .panel-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;line-height:1.1;margin-bottom:2.5rem;}
-
+ 
 /* Form */
 .field-group{margin-bottom:1.75rem;}
 .field-row{display:grid;gap:1rem;}
@@ -130,13 +130,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
 textarea{resize:vertical;min-height:80px;line-height:1.6;}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7570' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
 .field-hint{font-size:0.7rem;color:var(--muted);margin-top:0.4rem;}
-
+ 
 /* Day tabs */
 .day-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;}
 .day-tab{padding:0.75rem 1.25rem;font-size:0.7rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;margin-bottom:-1px;}
 .day-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 .day-panel{display:none;}.day-panel.active{display:block;}
-
+ 
 /* Hotels */
 .hotel-rows{display:flex;flex-direction:column;gap:1rem;}
 .hotel-row{display:grid;grid-template-columns:1fr 70px 100px 100px auto;gap:0.75rem;align-items:end;}
@@ -144,12 +144,12 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .remove-btn:hover{border-color:var(--danger);color:var(--danger);}
 .add-hotel-btn{margin-top:0.75rem;padding:0.6rem 1rem;border:1px dashed var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;width:100%;transition:all 0.15s;}
 .add-hotel-btn:hover{border-color:var(--gold);color:var(--gold);}
-
+ 
 /* Tags */
 .tag-select{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;}
 .tag-option{padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:20px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.15s;user-select:none;}
 .tag-option.selected{border-color:var(--gold);background:var(--gold);color:var(--white);}
-
+ 
 /* AI box */
 .ai-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;}
 .ai-box-label{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
@@ -159,7 +159,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .ai-extract-btn{padding:0.6rem 1.25rem;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:0.5rem;}
 .ai-extract-btn:hover{background:var(--gold);color:var(--white);}
 .ai-extract-btn:disabled{opacity:0.5;cursor:not-allowed;}
-
+ 
 /* Nav buttons */
 .nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);}
 .btn-back{padding:0.75rem 1.5rem;border:1px solid var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
@@ -169,13 +169,13 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .btn-generate{padding:0.875rem 2.5rem;border-radius:4px;border:none;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .btn-generate:hover{background:var(--ink);}
 .btn-generate:disabled{opacity:0.5;cursor:not-allowed;}
-
+ 
 /* Save status */
 .save-status{font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
 .save-status.saving{color:var(--gold);}
 .save-status.saved{color:var(--success);}
 .save-status.error{color:var(--danger);}
-
+ 
 /* Success */
 .success-box{background:var(--green-dark);border-radius:12px;padding:3rem 2.5rem;text-align:center;margin-top:2rem;}
 .success-icon{font-size:2rem;color:var(--gold-light);margin-bottom:1rem;}
@@ -185,14 +185,14 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .btn-dl:hover{background:var(--gold-light);}
 .btn-new{display:inline-block;padding:0.875rem 1.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin:0.25rem;}
 .btn-new:hover{border-color:rgba(255,255,255,0.5);color:var(--white);}
-
+ 
 /* Spinner */
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
 .spinner.dark{border-color:rgba(184,149,90,0.3);border-top-color:var(--gold);}
 @keyframes spin{to{transform:rotate(360deg)}}
-
+ 
 .divider{height:1px;background:var(--border);margin:2rem 0;}
-
+ 
 @media(max-width:800px){
   .shell{grid-template-columns:1fr;}
   .left{position:relative;height:auto;}
@@ -203,7 +203,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </style>
 </head>
 <body>
-
+ 
 <!-- ── LOGIN SCREEN ── -->
 <div id="login-screen" class="login-screen">
   <div class="login-bg"></div>
@@ -224,11 +224,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="login-status" id="login-status"></div>
   </div>
 </div>
-
+ 
 <!-- ── APP ── -->
 <div id="app-shell" class="app-shell">
 <div class="shell">
-
+ 
   <!-- LEFT -->
   <aside class="left">
     <div class="left-header">
@@ -238,12 +238,12 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="user-name" id="user-name-display">...</div>
       </div>
     </div>
-
+ 
     <div class="sync-bar">
       <div class="sync-dot" id="sync-dot"></div>
       <span id="sync-label">Connected to OneDrive</span>
     </div>
-
+ 
     <nav class="steps" id="step-nav">
       <div class="step-item active" onclick="goStep(0)" id="snav-0"><div class="step-num">1</div><div class="step-info"><div class="step-label">Step 1</div><div class="step-name">Client Info</div></div></div>
       <div class="step-connector"></div>
@@ -255,13 +255,13 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       <div class="step-connector"></div>
       <div class="step-item" onclick="goStep(4)" id="snav-4"><div class="step-num">5</div><div class="step-info"><div class="step-label">Step 5</div><div class="step-name">Generate ITQ</div></div></div>
     </nav>
-
+ 
     <div class="itq-list-header">
       <span>Recent ITQs</span>
       <span id="itq-count" style="color:rgba(255,255,255,0.2)"></span>
     </div>
     <div class="itq-list" id="itq-list"><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">Loading...</div></div>
-
+ 
     <div class="left-preview">
       <div class="lp-id" id="lp-id">KS ——</div>
       <div class="lp-name" id="lp-name">New Itinerary</div>
@@ -273,10 +273,10 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       </div>
     </div>
   </aside>
-
+ 
   <!-- RIGHT -->
   <main class="right">
-
+ 
     <!-- STEP 1 -->
     <div class="step-panel active" id="panel-0">
       <div class="panel-eyebrow">Step 1 of 5</div>
@@ -309,7 +309,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <button class="btn-next" onclick="goStep(1)">Next — Trip Details →</button>
       </div>
     </div>
-
+ 
     <!-- STEP 2 -->
     <div class="step-panel" id="panel-1">
       <div class="panel-eyebrow">Step 2 of 5</div>
@@ -358,7 +358,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <button class="btn-next" onclick="goStep(2)">Next — Itinerary →</button>
       </div>
     </div>
-
+ 
     <!-- STEP 3 -->
     <div class="step-panel" id="panel-2">
       <div class="panel-eyebrow">Step 3 of 5</div>
@@ -370,7 +370,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <button class="btn-next" onclick="goStep(3)">Next — Pricing →</button>
       </div>
     </div>
-
+ 
     <!-- STEP 4 -->
     <div class="step-panel" id="panel-3">
       <div class="panel-eyebrow">Step 4 of 5</div>
@@ -389,7 +389,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <button class="btn-next" onclick="goStep(4)">Next — Generate →</button>
       </div>
     </div>
-
+ 
     <!-- STEP 5 -->
     <div class="step-panel" id="panel-4">
       <div class="panel-eyebrow">Step 5 of 5</div>
@@ -401,26 +401,26 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
       </div>
       <div id="success-area"></div>
     </div>
-
+ 
   </main>
 </div>
 </div>
-
+ 
 <script>
 // ── MSAL CONFIG ──
 const msalConfig = {
   auth: {
     clientId: 'efa0fb2d-addf-4b0a-aef3-43c85860eca6',
-    authority: 'https://login.microsoftonline.com/common',
-    redirectUri: window.location.href.split('?')[0].split('#')[0],
+    authority: 'https://login.microsoftonline.com/1c14271c-bb5d-43ae-a8ae-420beddabe1d',
+    redirectUri: 'https://codijohn.github.io/kns-itq-builder/ITQ-Builder-OneDrive.html',
   },
   cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: true }
 };
-
+ 
 const loginRequest = {
   scopes: ['User.Read', 'Files.ReadWrite']
 };
-
+ 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 let currentUser = null;
 let accessToken = null;
@@ -429,7 +429,7 @@ let itqDatabase = [];
 let hotels = [];
 let saveTimer = null;
 let currentEditId = null;
-
+ 
 // ── AUTH ──
 async function initApp() {
   await msalInstance.initialize();
@@ -454,7 +454,7 @@ async function initApp() {
     showLogin();
   }
 }
-
+ 
 async function signIn() {
   const btn = document.getElementById('login-btn');
   const status = document.getElementById('login-status');
@@ -473,7 +473,7 @@ async function signIn() {
     status.className = 'login-status error';
   }
 }
-
+ 
 async function getToken() {
   try {
     const resp = await msalInstance.acquireTokenSilent({ ...loginRequest, account: currentUser });
@@ -485,17 +485,17 @@ async function getToken() {
     return accessToken;
   }
 }
-
+ 
 function signOut() {
   if (!confirm('Sign out of KNS Tour ITQ Builder?')) return;
   msalInstance.logout({ account: currentUser });
 }
-
+ 
 function showLogin() {
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app-shell').style.display = 'none';
 }
-
+ 
 async function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-shell').style.display = 'block';
@@ -511,7 +511,7 @@ async function showApp() {
   await loadITQList();
   await autoNextId();
 }
-
+ 
 // ── ONEDRIVE ──
 async function graphRequest(path, method='GET', body=null) {
   const token = await getToken();
@@ -525,7 +525,7 @@ async function graphRequest(path, method='GET', body=null) {
   if (res.status === 204 || res.status === 404) return null;
   return res.json();
 }
-
+ 
 async function graphUpload(path, content) {
   const token = await getToken();
   const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {
@@ -535,7 +535,7 @@ async function graphUpload(path, content) {
   });
   return res.json();
 }
-
+ 
 async function ensureFolder() {
   setSyncStatus('syncing','Connecting to OneDrive…');
   try {
@@ -550,7 +550,7 @@ async function ensureFolder() {
     setSyncStatus('error','OneDrive connection failed');
   }
 }
-
+ 
 async function loadITQList() {
   try {
     const data = await graphRequest(`/me/drive/root:/${FOLDER}/itqs.json:/content`);
@@ -565,7 +565,7 @@ async function loadITQList() {
     renderITQList();
   }
 }
-
+ 
 async function saveITQList() {
   setSyncStatus('syncing','Saving…');
   try {
@@ -575,7 +575,7 @@ async function saveITQList() {
     setSyncStatus('error','Save failed — check connection');
   }
 }
-
+ 
 async function autoNextId() {
   if (itqDatabase.length === 0) {
     document.getElementById('f-id').value = 'KS0001';
@@ -587,7 +587,7 @@ async function autoNextId() {
   document.getElementById('f-id').value = 'KS' + String(next).padStart(4,'0');
   syncPreview();
 }
-
+ 
 function renderITQList() {
   const el = document.getElementById('itq-list');
   document.getElementById('itq-count').textContent = itqDatabase.length;
@@ -603,7 +603,7 @@ function renderITQList() {
       <span class="itq-list-status ${statusClass[itq.status]||'status-rfq'}">${itq.status||'RFQ received'}</span>
     </div>`).join('');
 }
-
+ 
 function loadITQ(id) {
   const itq = itqDatabase.find(i=>i.id===id);
   if (!itq) return;
@@ -622,11 +622,11 @@ function loadITQ(id) {
   document.getElementById('f-inc').value = itq.inclusions||'';
   document.getElementById('f-exc').value = itq.exclusions||'';
   document.getElementById('f-notes').value = itq.notes||'';
-
+ 
   document.querySelectorAll('.tag-option').forEach(t => {
     t.classList.toggle('selected', (itq.tags||[]).includes(t.textContent));
   });
-
+ 
   buildDayTabs();
   const dayData = itq.dayData||{};
   Object.keys(dayData).forEach(k => {
@@ -635,13 +635,13 @@ function loadITQ(id) {
     if (t) t.value = dayData[k].title||'';
     if (s) s.value = (dayData[k].stops||[]).join('\n');
   });
-
+ 
   hotels = []; document.getElementById('hotel-rows').innerHTML='';
   (itq.hotels||[]).forEach(h => addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));
   syncPreview();
   goStep(0);
 }
-
+ 
 // ── UI ──
 function setSyncStatus(state, msg) {
   const dot = document.getElementById('sync-dot');
@@ -649,7 +649,7 @@ function setSyncStatus(state, msg) {
   dot.className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
   label.textContent = msg;
 }
-
+ 
 function goStep(n) {
   document.querySelectorAll('.step-panel').forEach((p,i)=>p.classList.toggle('active',i===n));
   document.querySelectorAll('.step-item').forEach((s,i)=>{
@@ -660,10 +660,10 @@ function goStep(n) {
   if (n===4) buildSummary();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
+ 
 function toggleTag(el) { el.classList.toggle('selected'); }
 function getTags() { return [...document.querySelectorAll('.tag-option.selected')].map(t=>t.textContent); }
-
+ 
 function syncPreview() {
   const id = document.getElementById('f-id').value||'KS ——';
   const client = document.getElementById('f-client').value||'—';
@@ -679,12 +679,12 @@ function syncPreview() {
   document.getElementById('lp-period').textContent = n!=='—'?`${n}N ${d}D`:'—';
   debounceSave();
 }
-
+ 
 function debounceSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(autoSaveDraft, 2000);
 }
-
+ 
 async function autoSaveDraft() {
   const data = collectData();
   if (!data.clientName && !data.destination) return;
@@ -696,7 +696,7 @@ async function autoSaveDraft() {
   renderITQList();
   await saveITQList();
 }
-
+ 
 function buildDayTabs() {
   const count = parseInt(document.getElementById('f-days').value)||5;
   const tabsEl = document.getElementById('day-tabs');
@@ -728,7 +728,7 @@ function buildDayTabs() {
     panelsEl.appendChild(panel);
   }
 }
-
+ 
 function addHotel(name='',stars='5',price='',supp='') {
   const id=Date.now()+'_'+Math.random().toString(36).slice(2,6);
   hotels.push(id);
@@ -742,12 +742,12 @@ function addHotel(name='',stars='5',price='',supp='') {
     <button class="remove-btn" onclick="removeHotel('${id}')" title="Remove">×</button>`;
   document.getElementById('hotel-rows').appendChild(row);
 }
-
+ 
 function removeHotel(id) {
   hotels=hotels.filter(h=>h!==id);
   document.getElementById('hotel-'+id).remove();
 }
-
+ 
 function getHotels() {
   return hotels.map(id=>({
     name:document.getElementById('hn-'+id)?.value||'',
@@ -756,7 +756,7 @@ function getHotels() {
     supp:document.getElementById('hx-'+id)?.value||'',
   })).filter(h=>h.name);
 }
-
+ 
 function collectData() {
   const days=parseInt(document.getElementById('f-days').value)||5;
   const dayData={};
@@ -784,7 +784,7 @@ function collectData() {
     notes:document.getElementById('f-notes').value||'',
   };
 }
-
+ 
 function buildSummary() {
   const days=parseInt(document.getElementById('f-days').value)||5;
   let rows='';
@@ -804,7 +804,7 @@ function buildSummary() {
     ${rows}
     <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">${hotels}</div>`;
 }
-
+ 
 // ── AI EXTRACT ──
 async function aiExtract() {
   const text=document.getElementById('ai-input').value.trim();
@@ -851,10 +851,10 @@ dayTitles:{"1":"title",...} dayStops:{"1":"stop1\nstop2",...} Return ONLY JSON.`
     btnText.textContent='Try again';btn.disabled=false;
   }
 }
-
+ 
 // ── GENERATE ──
 let lastGeneratedData=null;
-
+ 
 async function generateITQ() {
   const btn=document.getElementById('gen-btn');
   btn.disabled=true;
@@ -863,14 +863,14 @@ async function generateITQ() {
   data.status='ITQ sent';
   data.generatedAt=new Date().toISOString();
   lastGeneratedData=data;
-
+ 
   // Save to OneDrive
   const existing=itqDatabase.findIndex(i=>i.id===data.id);
   if(existing>=0)itqDatabase[existing]=data;
   else itqDatabase.push(data);
   renderITQList();
   await saveITQList();
-
+ 
   // Save individual ITQ file to OneDrive
   try {
     const html=buildITQHTML(data);
@@ -880,15 +880,15 @@ async function generateITQ() {
   } catch(e) {
     setSyncStatus('error','Could not save to OneDrive — downloading locally');
   }
-
+ 
   // Always download locally too
   const html=buildITQHTML(data);
   const filename=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
   downloadHTML(html, filename);
-
+ 
   btn.innerHTML='Generate &amp; Save ITQ';
   btn.disabled=false;
-
+ 
   document.getElementById('success-area').innerHTML=`
     <div class="success-box">
       <div class="success-icon">✦</div>
@@ -898,13 +898,13 @@ async function generateITQ() {
       <button class="btn-new" onclick="newITQ()">New ITQ</button>
     </div>`;
 }
-
+ 
 function reDownload() {
   if(!lastGeneratedData)return;
   const html=buildITQHTML(lastGeneratedData);
   downloadHTML(html,`${lastGeneratedData.id}-${(lastGeneratedData.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`);
 }
-
+ 
 async function newITQ() {
   document.getElementById('success-area').innerHTML='';
   document.querySelectorAll('input[type=text],input[type=email],input[type=number],textarea').forEach(el=>el.value='');
@@ -919,16 +919,16 @@ async function newITQ() {
   goStep(0);
   currentEditId=null;
 }
-
+ 
 function downloadHTML(html,filename){
   const blob=new Blob([html],{type:'text/html'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download=filename;a.click();
   URL.revokeObjectURL(a.href);
 }
-
+ 
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
+ 
 // ── BUILD ITQ HTML ──
 function buildITQHTML(d) {
   const secIds=['overview',...Array.from({length:d.days},(_,i)=>'day'+(i+1)),'pricing'];
@@ -941,7 +941,7 @@ function buildITQHTML(d) {
     return `<div class="section" id="sec-day${num}"><div class="day-section"><div class="day-header"><div class="day-big-num">${String(num).padStart(2,'0')}</div><div><div class="day-header-label">Day ${num}</div><div class="day-header-title">${esc(day.title)}</div></div></div><div class="stop-list">${stops}</div></div></div>`;
   }).join('');
   const hotelCards=d.hotels.map((h,i)=>`<div class="hotel-card ${i===0?'featured':''}"><div><div class="hotel-stars">${'★'.repeat(parseInt(h.stars||4))}</div><div class="hotel-name">${esc(h.name)}${i===0?` <span class="hotel-tag">${h.stars}★</span>`:''}</div></div><div class="hotel-price"><div class="price-amount">${esc(d.currency)} ${esc(h.price)}</div><div class="price-unit">per pax · twin share</div>${h.supp?`<div class="price-supp">Single supplement +${esc(d.currency)} ${esc(h.supp)}</div>`:''}</div></div>`).join('');
-
+ 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1104,7 +1104,7 @@ function show(id){
 <\/script>
 </body></html>`;
 }
-
+ 
 // ── BOOT ──
 initApp();
 </script>

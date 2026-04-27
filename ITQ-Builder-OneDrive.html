@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITQ Builder — KNS Tour</title>
+<script src="https://unpkg.com/@azure/msal-browser@3.10.0/lib/msal-browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --ink:#16140F; --cream:#FAF8F3; --gold:#B8955A; --gold-light:#D4B483;
+  --muted:#7A7570; --border:#E2DDD6; --surface:#F5F2EC; --white:#FFFFFF;
+  --green-dark:#1A2B1B; --success:#2D6A4F; --danger:#8B3A2A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--green-dark);
+  position:relative;overflow:hidden;
+}
+.login-bg{
+  position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8955A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.login-card{
+  position:relative;z-index:2;
+  text-align:center;max-width:400px;padding:2rem;
+}
+.login-brand{
+  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;
+  color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+.login-sub{
+  font-size:0.65rem;font-weight:500;color:rgba(255,255,255,0.3);
+  letter-spacing:0.3em;text-transform:uppercase;margin-bottom:3rem;
+}
+.login-title{
+  font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;
+  color:var(--white);margin-bottom:0.75rem;
+}
+.login-desc{
+  font-size:0.8rem;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:2.5rem;
+}
+.btn-login{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  padding:0.875rem 2rem;border-radius:4px;border:none;
+  background:var(--gold);color:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;
+  letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;width:100%;
+  justify-content:center;
+}
+.btn-login:hover{background:var(--gold-light);}
+.btn-login:disabled{opacity:0.5;cursor:not-allowed;}
+.ms-icon{width:18px;height:18px;flex-shrink:0;}
+.login-status{
+  margin-top:1.5rem;font-size:0.75rem;color:rgba(255,255,255,0.35);
+  min-height:1.2em;
+}
+.login-status.error{color:#F09595;}
+
+/* ── APP SHELL ── */
+.app-shell{display:none;}
+.shell{display:grid;grid-template-columns:360px 1fr;min-height:100vh;}
+
+/* ── LEFT ── */
+.left{background:var(--green-dark);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.left-header{padding:1.5rem 2rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;}
+.user-chip{display:flex;align-items:center;gap:0.5rem;cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:rgba(184,149,90,0.2);border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:500;color:var(--gold);}
+.user-name{font-size:0.65rem;color:rgba(255,255,255,0.4);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sync-bar{padding:0.5rem 2rem;font-size:0.65rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:#2D6A4F;flex-shrink:0;}
+.sync-dot.syncing{background:var(--gold);animation:pulse 1s ease-in-out infinite;}
+.sync-dot.error{background:#8B3A2A;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.steps{padding:1.25rem 2rem;flex:1;}
+.step-item{display:flex;gap:1rem;align-items:flex-start;padding:0.65rem 0;cursor:pointer;opacity:0.4;transition:opacity 0.2s;}
+.step-item.active{opacity:1;}.step-item.done{opacity:0.65;}.step-item:hover{opacity:0.8;}
+.step-num{width:24px;height:24px;border-radius:50%;border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:500;color:var(--gold);flex-shrink:0;transition:all 0.2s;}
+.step-item.active .step-num{background:var(--gold);color:var(--green-dark);border-color:var(--gold);}
+.step-item.done .step-num{background:rgba(184,149,90,0.15);border-color:var(--gold);}
+.step-label{font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.4);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.1rem;}
+.step-item.active .step-label{color:var(--gold-light);}
+.step-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:300;color:rgba(255,255,255,0.65);}
+.step-item.active .step-name{color:var(--white);}
+.step-connector{width:1px;height:16px;background:rgba(255,255,255,0.07);margin-left:calc(2rem + 12px);}
+
+/* ITQ list in sidebar */
+.itq-list-header{padding:0.75rem 2rem 0.5rem;font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.25);letter-spacing:0.3em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+.itq-list{padding:0 1rem 1rem;max-height:220px;overflow-y:auto;}
+.itq-list-item{padding:0.6rem 1rem;border-radius:6px;cursor:pointer;transition:background 0.15s;margin-bottom:2px;}
+.itq-list-item:hover{background:rgba(255,255,255,0.05);}
+.itq-list-id{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.2em;font-family:'DM Sans',sans-serif;}
+.itq-list-name{font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.itq-list-status{font-size:0.6rem;padding:1px 6px;border-radius:10px;display:inline-block;margin-top:3px;}
+.status-rfq{background:rgba(56,138,221,0.15);color:#85B7EB;}
+.status-sent{background:rgba(186,117,23,0.15);color:var(--gold);}
+.status-confirmed{background:rgba(45,106,79,0.15);color:#5DCAA5;}
+.status-lost{background:rgba(139,58,42,0.15);color:#F09595;}
+
+.left-preview{margin:0 1.25rem 1.25rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;}
+.lp-id{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.3rem;}
+.lp-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:var(--white);margin-bottom:0.65rem;line-height:1.3;}
+.lp-rows{display:flex;flex-direction:column;gap:0.3rem;}
+.lp-row{display:flex;justify-content:space-between;font-size:0.68rem;}
+.lp-key{color:rgba(255,255,255,0.3);}.lp-val{color:rgba(255,255,255,0.65);font-weight:500;}
+
+/* ── RIGHT ── */
+.right{padding:3rem 3rem 6rem;max-width:720px;}
+.step-panel{display:none;}.step-panel.active{display:block;}
+.panel-eyebrow{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.4em;text-transform:uppercase;margin-bottom:0.75rem;}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;line-height:1.1;margin-bottom:2.5rem;}
+
+/* Form */
+.field-group{margin-bottom:1.75rem;}
+.field-row{display:grid;gap:1rem;}
+.field-row.cols-2{grid-template-columns:1fr 1fr;}
+.field-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
+label{display:block;font-size:0.6rem;font-weight:500;color:var(--muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;}
+input[type=text],input[type=email],input[type=number],select,textarea{width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:300;color:var(--ink);transition:border-color 0.15s;appearance:none;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+textarea{resize:vertical;min-height:80px;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7570' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
+.field-hint{font-size:0.7rem;color:var(--muted);margin-top:0.4rem;}
+
+/* Day tabs */
+.day-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;}
+.day-tab{padding:0.75rem 1.25rem;font-size:0.7rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;margin-bottom:-1px;}
+.day-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.day-panel{display:none;}.day-panel.active{display:block;}
+
+/* Hotels */
+.hotel-rows{display:flex;flex-direction:column;gap:1rem;}
+.hotel-row{display:grid;grid-template-columns:1fr 70px 100px 100px auto;gap:0.75rem;align-items:end;}
+.remove-btn{width:36px;height:36px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.remove-btn:hover{border-color:var(--danger);color:var(--danger);}
+.add-hotel-btn{margin-top:0.75rem;padding:0.6rem 1rem;border:1px dashed var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;width:100%;transition:all 0.15s;}
+.add-hotel-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* Tags */
+.tag-select{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;}
+.tag-option{padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:20px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.15s;user-select:none;}
+.tag-option.selected{border-color:var(--gold);background:var(--gold);color:var(--white);}
+
+/* AI box */
+.ai-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;}
+.ai-box-label{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;}
+.ai-textarea{width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:300;color:var(--ink);resize:vertical;min-height:90px;line-height:1.6;margin-bottom:0.75rem;}
+.ai-textarea:focus{outline:none;border-color:var(--gold);}
+.ai-extract-btn{padding:0.6rem 1.25rem;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:0.5rem;}
+.ai-extract-btn:hover{background:var(--gold);color:var(--white);}
+.ai-extract-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* Nav buttons */
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);}
+.btn-back{padding:0.75rem 1.5rem;border:1px solid var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
+.btn-back:hover{border-color:var(--ink);color:var(--ink);}
+.btn-next{padding:0.75rem 2rem;border-radius:4px;border:none;background:var(--ink);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
+.btn-next:hover{background:var(--gold);}
+.btn-generate{padding:0.875rem 2.5rem;border-radius:4px;border:none;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-generate:hover{background:var(--ink);}
+.btn-generate:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* Save status */
+.save-status{font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.save-status.saving{color:var(--gold);}
+.save-status.saved{color:var(--success);}
+.save-status.error{color:var(--danger);}
+
+/* Success */
+.success-box{background:var(--green-dark);border-radius:12px;padding:3rem 2.5rem;text-align:center;margin-top:2rem;}
+.success-icon{font-size:2rem;color:var(--gold-light);margin-bottom:1rem;}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:0.5rem;}
+.success-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:2rem;line-height:1.7;}
+.btn-dl{display:inline-block;padding:0.875rem 2rem;border-radius:4px;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;margin:0.25rem;}
+.btn-dl:hover{background:var(--gold-light);}
+.btn-new{display:inline-block;padding:0.875rem 1.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin:0.25rem;}
+.btn-new:hover{border-color:rgba(255,255,255,0.5);color:var(--white);}
+
+/* Spinner */
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
+.spinner.dark{border-color:rgba(184,149,90,0.3);border-top-color:var(--gold);}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.divider{height:1px;background:var(--border);margin:2rem 0;}
+
+@media(max-width:800px){
+  .shell{grid-template-columns:1fr;}
+  .left{position:relative;height:auto;}
+  .right{padding:2rem 1.5rem 4rem;}
+  .field-row.cols-2,.field-row.cols-3{grid-template-columns:1fr;}
+  .hotel-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="login-screen" class="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="login-brand">KNS Tour</div>
+    <div class="login-sub">ITQ Builder</div>
+    <h2 class="login-title">Sign in to continue</h2>
+    <p class="login-desc">Your ITQs are stored in your team's OneDrive.<br>Sign in with your Microsoft 365 account to access and save them.</p>
+    <button class="btn-login" id="login-btn" onclick="signIn()">
+      <svg class="ms-icon" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
+        <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
+        <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
+        <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+      </svg>
+      Sign in with Microsoft
+    </button>
+    <div class="login-status" id="login-status"></div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app-shell" class="app-shell">
+<div class="shell">
+
+  <!-- LEFT -->
+  <aside class="left">
+    <div class="left-header">
+      <div class="brand">KNS Tour</div>
+      <div class="user-chip" onclick="signOut()" title="Sign out">
+        <div class="user-avatar" id="user-initials">?</div>
+        <div class="user-name" id="user-name-display">...</div>
+      </div>
+    </div>
+
+    <div class="sync-bar">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">Connected to OneDrive</span>
+    </div>
+
+    <nav class="steps" id="step-nav">
+      <div class="step-item active" onclick="goStep(0)" id="snav-0"><div class="step-num">1</div><div class="step-info"><div class="step-label">Step 1</div><div class="step-name">Client Info</div></div></div>
+      <div class="step-connector"></div>
+      <div class="step-item" onclick="goStep(1)" id="snav-1"><div class="step-num">2</div><div class="step-info"><div class="step-label">Step 2</div><div class="step-name">Trip Details</div></div></div>
+      <div class="step-connector"></div>
+      <div class="step-item" onclick="goStep(2)" id="snav-2"><div class="step-num">3</div><div class="step-info"><div class="step-label">Step 3</div><div class="step-name">Itinerary</div></div></div>
+      <div class="step-connector"></div>
+      <div class="step-item" onclick="goStep(3)" id="snav-3"><div class="step-num">4</div><div class="step-info"><div class="step-label">Step 4</div><div class="step-name">Pricing</div></div></div>
+      <div class="step-connector"></div>
+      <div class="step-item" onclick="goStep(4)" id="snav-4"><div class="step-num">5</div><div class="step-info"><div class="step-label">Step 5</div><div class="step-name">Generate ITQ</div></div></div>
+    </nav>
+
+    <div class="itq-list-header">
+      <span>Recent ITQs</span>
+      <span id="itq-count" style="color:rgba(255,255,255,0.2)"></span>
+    </div>
+    <div class="itq-list" id="itq-list"><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">Loading...</div></div>
+
+    <div class="left-preview">
+      <div class="lp-id" id="lp-id">KS ——</div>
+      <div class="lp-name" id="lp-name">New Itinerary</div>
+      <div class="lp-rows">
+        <div class="lp-row"><span class="lp-key">Client</span><span class="lp-val" id="lp-client">—</span></div>
+        <div class="lp-row"><span class="lp-key">Destination</span><span class="lp-val" id="lp-dest">—</span></div>
+        <div class="lp-row"><span class="lp-key">Pax</span><span class="lp-val" id="lp-pax">—</span></div>
+        <div class="lp-row"><span class="lp-key">Period</span><span class="lp-val" id="lp-period">—</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT -->
+  <main class="right">
+
+    <!-- STEP 1 -->
+    <div class="step-panel active" id="panel-0">
+      <div class="panel-eyebrow">Step 1 of 5</div>
+      <h2 class="panel-title">Client<br>Information</h2>
+      <div class="ai-box">
+        <div class="ai-box-label"><div class="ai-dot"></div>AI Autofill — paste an email or message</div>
+        <textarea class="ai-textarea" id="ai-input" placeholder="Paste the client's email, WhatsApp message, or any text — Claude will extract all details automatically..."></textarea>
+        <button class="ai-extract-btn" id="ai-btn" onclick="aiExtract()"><span id="ai-btn-text">Extract details</span></button>
+      </div>
+      <div class="field-group">
+        <div class="field-row cols-2">
+          <div><label>Quote Number</label><input type="text" id="f-id" placeholder="KS0001" oninput="syncPreview()"></div>
+          <div><label>Date</label><input type="text" id="f-date" placeholder="e.g. 2 July 2025" oninput="syncPreview()"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row cols-2">
+          <div><label>Client Name</label><input type="text" id="f-client" placeholder="e.g. Linda Lim" oninput="syncPreview()"></div>
+          <div><label>Company</label><input type="text" id="f-company" placeholder="e.g. Cruise Travel" oninput="syncPreview()"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row cols-2">
+          <div><label>Email</label><input type="email" id="f-email" placeholder="client@company.com" oninput="syncPreview()"></div>
+          <div><label>Phone</label><input type="text" id="f-phone" placeholder="+65 9xxx xxxx" oninput="syncPreview()"></div>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <div class="save-status" id="save-status-0"></div>
+        <button class="btn-next" onclick="goStep(1)">Next — Trip Details →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel" id="panel-1">
+      <div class="panel-eyebrow">Step 2 of 5</div>
+      <h2 class="panel-title">Trip<br>Details</h2>
+      <div class="field-group">
+        <div class="field-row cols-2">
+          <div><label>Destination</label><input type="text" id="f-dest" placeholder="e.g. Jeju Island, Korea" oninput="syncPreview()"></div>
+          <div><label>Passengers</label><input type="text" id="f-pax" placeholder="e.g. 450 Pax" oninput="syncPreview()"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row cols-3">
+          <div><label>Nights</label><input type="number" id="f-nights" placeholder="4" min="1" max="14" value="4" oninput="syncPreview();buildDayTabs()"></div>
+          <div><label>Days</label><input type="number" id="f-days" placeholder="5" min="1" max="15" value="5" oninput="syncPreview();buildDayTabs()"></div>
+          <div><label>Currency</label>
+            <select id="f-currency">
+              <option value="SGD">SGD</option><option value="KRW">KRW</option>
+              <option value="USD">USD</option><option value="JPY">JPY</option>
+              <option value="MYR">MYR</option><option value="THB">THB</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Tags</label>
+        <div class="tag-select" id="tag-select">
+          <div class="tag-option" onclick="toggleTag(this)">Inbound</div>
+          <div class="tag-option" onclick="toggleTag(this)">Outbound</div>
+          <div class="tag-option" onclick="toggleTag(this)">Family</div>
+          <div class="tag-option" onclick="toggleTag(this)">Honeymoon</div>
+          <div class="tag-option" onclick="toggleTag(this)">Corporate</div>
+          <div class="tag-option" onclick="toggleTag(this)">Group</div>
+          <div class="tag-option" onclick="toggleTag(this)">Solo</div>
+          <div class="tag-option" onclick="toggleTag(this)">Cultural</div>
+          <div class="tag-option" onclick="toggleTag(this)">Beach</div>
+          <div class="tag-option" onclick="toggleTag(this)">Nature</div>
+          <div class="tag-option" onclick="toggleTag(this)">Historical</div>
+          <div class="tag-option" onclick="toggleTag(this)">Romantic</div>
+          <div class="tag-option" onclick="toggleTag(this)">Island</div>
+          <div class="tag-option" onclick="toggleTag(this)">City</div>
+          <div class="tag-option" onclick="toggleTag(this)">Adventure</div>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(0)">← Back</button>
+        <button class="btn-next" onclick="goStep(2)">Next — Itinerary →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel" id="panel-2">
+      <div class="panel-eyebrow">Step 3 of 5</div>
+      <h2 class="panel-title">Day by Day<br>Itinerary</h2>
+      <div class="day-tabs" id="day-tabs"></div>
+      <div id="day-panels"></div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-next" onclick="goStep(3)">Next — Pricing →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-panel" id="panel-3">
+      <div class="panel-eyebrow">Step 4 of 5</div>
+      <h2 class="panel-title">Hotels<br>&amp; Pricing</h2>
+      <div class="field-group">
+        <label>Hotel Options</label>
+        <div class="hotel-rows" id="hotel-rows"></div>
+        <button class="add-hotel-btn" onclick="addHotel()">+ Add hotel option</button>
+      </div>
+      <div class="divider"></div>
+      <div class="field-group"><label>Inclusions</label><textarea id="f-inc" placeholder="e.g. 4 hotel breakfasts · 4 local lunches&#10;45-seat deluxe coach with driver and guide&#10;All attraction admission fees"></textarea></div>
+      <div class="field-group"><label>Exclusions</label><textarea id="f-exc" placeholder="e.g. Tips for guides and drivers — USD 5/pax/day"></textarea></div>
+      <div class="field-group"><label>Notes</label><textarea id="f-notes" placeholder="e.g. The itinerary is subject to change based on local conditions."></textarea></div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-next" onclick="goStep(4)">Next — Generate →</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-panel" id="panel-4">
+      <div class="panel-eyebrow">Step 5 of 5</div>
+      <h2 class="panel-title">Generate<br>Your ITQ</h2>
+      <div id="gen-summary" style="background:var(--surface);border-radius:8px;padding:1.5rem;margin-bottom:2rem;font-size:0.85rem;line-height:1.8;"></div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(3)">← Back</button>
+        <button class="btn-generate" id="gen-btn" onclick="generateITQ()">Generate &amp; Save ITQ</button>
+      </div>
+      <div id="success-area"></div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script>
+// ── MSAL CONFIG ──
+const msalConfig = {
+  auth: {
+    clientId: 'efa0fb2d-addf-4b0a-aef3-43c85860eca6',
+    authority: 'https://login.microsoftonline.com/common',
+    redirectUri: 'https://knstour1.sharepoint.com/sites/KSCorporationIntranet/Shared%20Documents/ITQ-Builder-OneDrive.html',
+  },
+  cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: true }
+};
+
+const loginRequest = {
+  scopes: ['User.Read', 'Files.ReadWrite']
+};
+
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+let currentUser = null;
+let accessToken = null;
+const FOLDER = 'KNSTour-ITQ';
+let itqDatabase = [];
+let hotels = [];
+let saveTimer = null;
+let currentEditId = null;
+
+// ── AUTH ──
+async function initApp() {
+  await msalInstance.initialize();
+  const resp = await msalInstance.handleRedirectPromise();
+  if (resp) {
+    currentUser = resp.account;
+    accessToken = resp.accessToken;
+    showApp();
+    return;
+  }
+  const accounts = msalInstance.getAllAccounts();
+  if (accounts.length > 0) {
+    currentUser = accounts[0];
+    try {
+      const tokenResp = await msalInstance.acquireTokenSilent({ ...loginRequest, account: currentUser });
+      accessToken = tokenResp.accessToken;
+      showApp();
+    } catch(e) {
+      showLogin();
+    }
+  } else {
+    showLogin();
+  }
+}
+
+async function signIn() {
+  const btn = document.getElementById('login-btn');
+  const status = document.getElementById('login-status');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Signing in…`;
+  status.textContent = '';
+  try {
+    const resp = await msalInstance.loginPopup(loginRequest);
+    currentUser = resp.account;
+    accessToken = resp.accessToken;
+    showApp();
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = `<svg class="ms-icon" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg> Sign in with Microsoft`;
+    status.textContent = e.message?.includes('user_cancelled') ? 'Sign-in cancelled.' : 'Sign-in failed. Please try again.';
+    status.className = 'login-status error';
+  }
+}
+
+async function getToken() {
+  try {
+    const resp = await msalInstance.acquireTokenSilent({ ...loginRequest, account: currentUser });
+    accessToken = resp.accessToken;
+    return accessToken;
+  } catch(e) {
+    const resp = await msalInstance.acquireTokenPopup({ ...loginRequest, account: currentUser });
+    accessToken = resp.accessToken;
+    return accessToken;
+  }
+}
+
+function signOut() {
+  if (!confirm('Sign out of KNS Tour ITQ Builder?')) return;
+  msalInstance.logout({ account: currentUser });
+}
+
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-shell').style.display = 'none';
+}
+
+async function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+  const name = currentUser?.name || currentUser?.username || '';
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('user-initials').textContent = initials || '?';
+  document.getElementById('user-name-display').textContent = name.split(' ')[0];
+  buildDayTabs();
+  addHotel('','5','','');
+  addHotel('','4','','');
+  syncPreview();
+  await ensureFolder();
+  await loadITQList();
+  await autoNextId();
+}
+
+// ── ONEDRIVE ──
+async function graphRequest(path, method='GET', body=null) {
+  const token = await getToken();
+  const opts = {
+    method,
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, opts);
+  if (!res.ok && res.status !== 404) throw new Error(`Graph error ${res.status}`);
+  if (res.status === 204 || res.status === 404) return null;
+  return res.json();
+}
+
+async function graphUpload(path, content) {
+  const token = await getToken();
+  const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {
+    method: 'PUT',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: content
+  });
+  return res.json();
+}
+
+async function ensureFolder() {
+  setSyncStatus('syncing','Connecting to OneDrive…');
+  try {
+    const check = await graphRequest(`/me/drive/root:/${FOLDER}`);
+    if (!check) {
+      await graphRequest('/me/drive/root/children', 'POST', {
+        name: FOLDER, folder: {}, '@microsoft.graph.conflictBehavior': 'rename'
+      });
+    }
+    setSyncStatus('ok','Connected to OneDrive');
+  } catch(e) {
+    setSyncStatus('error','OneDrive connection failed');
+  }
+}
+
+async function loadITQList() {
+  try {
+    const data = await graphRequest(`/me/drive/root:/${FOLDER}/itqs.json:/content`);
+    if (data) {
+      itqDatabase = Array.isArray(data) ? data : [];
+    } else {
+      itqDatabase = [];
+    }
+    renderITQList();
+  } catch(e) {
+    itqDatabase = [];
+    renderITQList();
+  }
+}
+
+async function saveITQList() {
+  setSyncStatus('syncing','Saving…');
+  try {
+    await graphUpload(`/me/drive/root:/${FOLDER}/itqs.json:/content`, JSON.stringify(itqDatabase, null, 2));
+    setSyncStatus('ok','Saved to OneDrive');
+  } catch(e) {
+    setSyncStatus('error','Save failed — check connection');
+  }
+}
+
+async function autoNextId() {
+  if (itqDatabase.length === 0) {
+    document.getElementById('f-id').value = 'KS0001';
+    syncPreview();
+    return;
+  }
+  const nums = itqDatabase.map(i => parseInt((i.id||'KS0000').replace('KS',''))).filter(n=>!isNaN(n));
+  const next = Math.max(...nums) + 1;
+  document.getElementById('f-id').value = 'KS' + String(next).padStart(4,'0');
+  syncPreview();
+}
+
+function renderITQList() {
+  const el = document.getElementById('itq-list');
+  document.getElementById('itq-count').textContent = itqDatabase.length;
+  if (itqDatabase.length === 0) {
+    el.innerHTML = '<div style="font-size:0.7rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">No ITQs yet</div>';
+    return;
+  }
+  const statusClass = { 'RFQ received':'status-rfq','ITQ sent':'status-sent','Confirmed':'status-confirmed','Lost':'status-lost' };
+  el.innerHTML = [...itqDatabase].reverse().slice(0,20).map(itq => `
+    <div class="itq-list-item" onclick="loadITQ('${itq.id}')">
+      <div class="itq-list-id">${itq.id||'—'}</div>
+      <div class="itq-list-name">${itq.clientName||'Unknown'} — ${itq.destination||'—'}</div>
+      <span class="itq-list-status ${statusClass[itq.status]||'status-rfq'}">${itq.status||'RFQ received'}</span>
+    </div>`).join('');
+}
+
+function loadITQ(id) {
+  const itq = itqDatabase.find(i=>i.id===id);
+  if (!itq) return;
+  currentEditId = id;
+  document.getElementById('f-id').value = itq.id||'';
+  document.getElementById('f-date').value = itq.date||'';
+  document.getElementById('f-client').value = itq.clientName||'';
+  document.getElementById('f-company').value = itq.company||'';
+  document.getElementById('f-email').value = itq.email||'';
+  document.getElementById('f-phone').value = itq.phone||'';
+  document.getElementById('f-dest').value = itq.destination||'';
+  document.getElementById('f-pax').value = itq.pax||'';
+  document.getElementById('f-nights').value = itq.nights||4;
+  document.getElementById('f-days').value = itq.days||5;
+  document.getElementById('f-currency').value = itq.currency||'SGD';
+  document.getElementById('f-inc').value = itq.inclusions||'';
+  document.getElementById('f-exc').value = itq.exclusions||'';
+  document.getElementById('f-notes').value = itq.notes||'';
+
+  document.querySelectorAll('.tag-option').forEach(t => {
+    t.classList.toggle('selected', (itq.tags||[]).includes(t.textContent));
+  });
+
+  buildDayTabs();
+  const dayData = itq.dayData||{};
+  Object.keys(dayData).forEach(k => {
+    const t = document.getElementById(`d${k}-title`);
+    const s = document.getElementById(`d${k}-stops`);
+    if (t) t.value = dayData[k].title||'';
+    if (s) s.value = (dayData[k].stops||[]).join('\n');
+  });
+
+  hotels = []; document.getElementById('hotel-rows').innerHTML='';
+  (itq.hotels||[]).forEach(h => addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));
+  syncPreview();
+  goStep(0);
+}
+
+// ── UI ──
+function setSyncStatus(state, msg) {
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  dot.className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
+  label.textContent = msg;
+}
+
+function goStep(n) {
+  document.querySelectorAll('.step-panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.step-item').forEach((s,i)=>{
+    s.classList.toggle('active',i===n);
+    s.classList.toggle('done',i<n);
+  });
+  if (n===2) buildDayTabs();
+  if (n===4) buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleTag(el) { el.classList.toggle('selected'); }
+function getTags() { return [...document.querySelectorAll('.tag-option.selected')].map(t=>t.textContent); }
+
+function syncPreview() {
+  const id = document.getElementById('f-id').value||'KS ——';
+  const client = document.getElementById('f-client').value||'—';
+  const dest = document.getElementById('f-dest').value||'—';
+  const pax = document.getElementById('f-pax').value||'—';
+  const n = document.getElementById('f-nights').value||'—';
+  const d = document.getElementById('f-days').value||'—';
+  document.getElementById('lp-id').textContent = id;
+  document.getElementById('lp-name').textContent = dest!=='—'?dest:'New Itinerary';
+  document.getElementById('lp-client').textContent = client;
+  document.getElementById('lp-dest').textContent = dest;
+  document.getElementById('lp-pax').textContent = pax;
+  document.getElementById('lp-period').textContent = n!=='—'?`${n}N ${d}D`:'—';
+  debounceSave();
+}
+
+function debounceSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(autoSaveDraft, 2000);
+}
+
+async function autoSaveDraft() {
+  const data = collectData();
+  if (!data.clientName && !data.destination) return;
+  const existing = itqDatabase.findIndex(i=>i.id===data.id);
+  data.status = data.status || 'RFQ received';
+  data.savedAt = new Date().toISOString();
+  if (existing >= 0) itqDatabase[existing] = data;
+  else itqDatabase.push(data);
+  renderITQList();
+  await saveITQList();
+}
+
+function buildDayTabs() {
+  const count = parseInt(document.getElementById('f-days').value)||5;
+  const tabsEl = document.getElementById('day-tabs');
+  const panelsEl = document.getElementById('day-panels');
+  const existing = {};
+  for (let i=1; i<=15; i++) {
+    const t = document.getElementById(`d${i}-title`);
+    const s = document.getElementById(`d${i}-stops`);
+    if (t) existing[i] = { title:t.value, stops:s?.value||'' };
+  }
+  tabsEl.innerHTML=''; panelsEl.innerHTML='';
+  for (let i=1; i<=count; i++) {
+    const tab = document.createElement('button');
+    tab.className='day-tab'+(i===1?' active':'');
+    tab.textContent=`Day ${i}`;
+    tab.onclick=()=>{
+      document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('dpanel-'+i).classList.add('active');
+    };
+    tabsEl.appendChild(tab);
+    const panel=document.createElement('div');
+    panel.className='day-panel'+(i===1?' active':'');
+    panel.id='dpanel-'+i;
+    panel.innerHTML=`
+      <div class="field-group"><label>Day ${i} Title</label><input type="text" id="d${i}-title" placeholder="e.g. Arrival · Coastal Highlights" value="${existing[i]?.title||''}"></div>
+      <div class="field-group"><label>Stops (one per line)</label><textarea id="d${i}-stops" style="min-height:150px" placeholder="Arrive in Jeju&#10;Dodu Rainbow Coastal Road&#10;Lunch @ Restaurant&#10;Dinner @ Black Pork">${existing[i]?.stops||''}</textarea><div class="field-hint">Each line = one stop on the day sheet</div></div>`;
+    panelsEl.appendChild(panel);
+  }
+}
+
+function addHotel(name='',stars='5',price='',supp='') {
+  const id=Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  hotels.push(id);
+  const row=document.createElement('div');
+  row.className='hotel-row'; row.id='hotel-'+id;
+  row.innerHTML=`
+    <div><label>Hotel Name</label><input type="text" id="hn-${id}" value="${name}" placeholder="e.g. Jeju Maison Glad Hotel"></div>
+    <div><label>Stars</label><select id="hs-${id}"><option ${stars==='5'?'selected':''}>5</option><option ${stars==='4'?'selected':''}>4</option><option ${stars==='3'?'selected':''}>3</option></select></div>
+    <div><label>Price/pax</label><input type="text" id="hp-${id}" value="${price}" placeholder="990"></div>
+    <div><label>SGL Supp</label><input type="text" id="hx-${id}" value="${supp}" placeholder="+490"></div>
+    <button class="remove-btn" onclick="removeHotel('${id}')" title="Remove">×</button>`;
+  document.getElementById('hotel-rows').appendChild(row);
+}
+
+function removeHotel(id) {
+  hotels=hotels.filter(h=>h!==id);
+  document.getElementById('hotel-'+id).remove();
+}
+
+function getHotels() {
+  return hotels.map(id=>({
+    name:document.getElementById('hn-'+id)?.value||'',
+    stars:document.getElementById('hs-'+id)?.value||'4',
+    price:document.getElementById('hp-'+id)?.value||'',
+    supp:document.getElementById('hx-'+id)?.value||'',
+  })).filter(h=>h.name);
+}
+
+function collectData() {
+  const days=parseInt(document.getElementById('f-days').value)||5;
+  const dayData={};
+  for(let i=1;i<=days;i++){
+    dayData[i]={
+      title:document.getElementById(`d${i}-title`)?.value||`Day ${i}`,
+      stops:(document.getElementById(`d${i}-stops`)?.value||'').split('\n').map(s=>s.trim()).filter(Boolean)
+    };
+  }
+  return {
+    id:document.getElementById('f-id').value||'KS0001',
+    date:document.getElementById('f-date').value||'',
+    clientName:document.getElementById('f-client').value||'',
+    company:document.getElementById('f-company').value||'',
+    email:document.getElementById('f-email').value||'',
+    phone:document.getElementById('f-phone').value||'',
+    destination:document.getElementById('f-dest').value||'',
+    pax:document.getElementById('f-pax').value||'',
+    nights:document.getElementById('f-nights').value||'4',
+    days, currency:document.getElementById('f-currency').value||'SGD',
+    tags:getTags(), dayData,
+    hotels:getHotels(),
+    inclusions:document.getElementById('f-inc').value||'',
+    exclusions:document.getElementById('f-exc').value||'',
+    notes:document.getElementById('f-notes').value||'',
+  };
+}
+
+function buildSummary() {
+  const days=parseInt(document.getElementById('f-days').value)||5;
+  let rows='';
+  for(let i=1;i<=days;i++){
+    const title=document.getElementById(`d${i}-title`)?.value||'—';
+    rows+=`<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem"><span style="color:var(--muted)">Day ${i}</span><span>${title||'—'}</span></div>`;
+  }
+  const hotels=getHotels().map(h=>`${h.name} (${h.stars}★) — ${document.getElementById('f-currency').value} ${h.price}`).join('<br>')||'—';
+  document.getElementById('gen-summary').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+      <div><div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Client</div>
+        <div style="line-height:1.8"><strong>${document.getElementById('f-client').value||'—'}</strong><br>${document.getElementById('f-company').value||''}<br><span style="color:var(--muted);font-size:0.8rem">${document.getElementById('f-email').value||''}</span></div></div>
+      <div><div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Trip</div>
+        <div style="line-height:1.8"><strong>${document.getElementById('f-dest').value||'—'}</strong><br>${document.getElementById('f-nights').value||''}N ${document.getElementById('f-days').value||''}D<br><span style="color:var(--muted);font-size:0.8rem">${document.getElementById('f-pax').value||'—'}</span></div></div>
+    </div>
+    <div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Itinerary</div>
+    ${rows}
+    <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">${hotels}</div>`;
+}
+
+// ── AI EXTRACT ──
+async function aiExtract() {
+  const text=document.getElementById('ai-input').value.trim();
+  if(!text)return;
+  const btn=document.getElementById('ai-btn');
+  const btnText=document.getElementById('ai-btn-text');
+  btn.disabled=true;
+  btnText.innerHTML='<span class="spinner dark"></span> Extracting…';
+  try {
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:1000,
+      system:`Extract travel ITQ details. Return ONLY valid JSON:
+{"clientName":"","company":"","email":"","phone":"","destination":"","pax":"","nights":"","days":"","currency":"SGD","tags":[],"dayTitles":{},"dayStops":{},"hotels":[{"name":"","stars":"4","price":"","supp":""}],"inclusions":"","exclusions":"","notes":""}
+dayTitles:{"1":"title",...} dayStops:{"1":"stop1\nstop2",...} Return ONLY JSON.`,
+      messages:[{role:'user',content:text}]
+    })});
+    const data=await res.json();
+    let d;try{d=JSON.parse(data.content[0].text);}catch(e){d={};}
+    if(d.clientName)document.getElementById('f-client').value=d.clientName;
+    if(d.company)document.getElementById('f-company').value=d.company;
+    if(d.email)document.getElementById('f-email').value=d.email;
+    if(d.phone)document.getElementById('f-phone').value=d.phone;
+    if(d.destination)document.getElementById('f-dest').value=d.destination;
+    if(d.pax)document.getElementById('f-pax').value=d.pax;
+    if(d.nights)document.getElementById('f-nights').value=d.nights;
+    if(d.days){document.getElementById('f-days').value=d.days;buildDayTabs();}
+    if(d.currency)document.getElementById('f-currency').value=d.currency;
+    if(d.inclusions)document.getElementById('f-inc').value=d.inclusions;
+    if(d.exclusions)document.getElementById('f-exc').value=d.exclusions;
+    if(d.notes)document.getElementById('f-notes').value=d.notes;
+    if(d.tags)document.querySelectorAll('.tag-option').forEach(t=>{if(d.tags.includes(t.textContent))t.classList.add('selected');});
+    if(d.hotels?.length){hotels=[];document.getElementById('hotel-rows').innerHTML='';d.hotels.forEach(h=>addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));}
+    const dc=parseInt(d.days)||5;
+    for(let i=1;i<=dc;i++){
+      const t=document.getElementById(`d${i}-title`);
+      const s=document.getElementById(`d${i}-stops`);
+      if(t&&d.dayTitles?.[i])t.value=d.dayTitles[i];
+      if(s&&d.dayStops?.[i])s.value=d.dayStops[i];
+    }
+    syncPreview();
+    btnText.innerHTML='✓ Done';
+    setTimeout(()=>{btnText.textContent='Extract details';btn.disabled=false;},2000);
+  } catch(e){
+    btnText.textContent='Try again';btn.disabled=false;
+  }
+}
+
+// ── GENERATE ──
+let lastGeneratedData=null;
+
+async function generateITQ() {
+  const btn=document.getElementById('gen-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span> Building…';
+  const data=collectData();
+  data.status='ITQ sent';
+  data.generatedAt=new Date().toISOString();
+  lastGeneratedData=data;
+
+  // Save to OneDrive
+  const existing=itqDatabase.findIndex(i=>i.id===data.id);
+  if(existing>=0)itqDatabase[existing]=data;
+  else itqDatabase.push(data);
+  renderITQList();
+  await saveITQList();
+
+  // Save individual ITQ file to OneDrive
+  try {
+    const html=buildITQHTML(data);
+    const filename=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
+    await graphUpload(`/me/drive/root:/${FOLDER}/${filename}:/content`, html);
+    setSyncStatus('ok','ITQ saved to OneDrive');
+  } catch(e) {
+    setSyncStatus('error','Could not save to OneDrive — downloading locally');
+  }
+
+  // Always download locally too
+  const html=buildITQHTML(data);
+  const filename=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
+  downloadHTML(html, filename);
+
+  btn.innerHTML='Generate &amp; Save ITQ';
+  btn.disabled=false;
+
+  document.getElementById('success-area').innerHTML=`
+    <div class="success-box">
+      <div class="success-icon">✦</div>
+      <div class="success-title">${data.id} is ready</div>
+      <div class="success-sub">Saved to OneDrive · <strong>KNSTour-ITQ/${filename}</strong><br>Also downloaded to your device. Ready to send.</div>
+      <button class="btn-dl" onclick="reDownload()">Download again</button>
+      <button class="btn-new" onclick="newITQ()">New ITQ</button>
+    </div>`;
+}
+
+function reDownload() {
+  if(!lastGeneratedData)return;
+  const html=buildITQHTML(lastGeneratedData);
+  downloadHTML(html,`${lastGeneratedData.id}-${(lastGeneratedData.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`);
+}
+
+async function newITQ() {
+  document.getElementById('success-area').innerHTML='';
+  document.querySelectorAll('input[type=text],input[type=email],input[type=number],textarea').forEach(el=>el.value='');
+  document.querySelectorAll('.tag-option').forEach(t=>t.classList.remove('selected'));
+  document.getElementById('f-nights').value=4;
+  document.getElementById('f-days').value=5;
+  hotels=[];document.getElementById('hotel-rows').innerHTML='';
+  buildDayTabs();
+  addHotel('','5','','');addHotel('','4','','');
+  await autoNextId();
+  syncPreview();
+  goStep(0);
+  currentEditId=null;
+}
+
+function downloadHTML(html,filename){
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── BUILD ITQ HTML ──
+function buildITQHTML(d) {
+  const secIds=['overview',...Array.from({length:d.days},(_,i)=>'day'+(i+1)),'pricing'];
+  const navBtns=['Overview',...Array.from({length:d.days},(_,i)=>`Day ${i+1}`),'Pricing']
+    .map((label,i)=>`<button class="nav-btn${i===0?' active':''}" onclick="show('${secIds[i]}')">${label}</button>`).join('');
+  const overviewRows=Object.entries(d.dayData).map(([num,day])=>
+    `<div class="day-row" onclick="show('day${num}')"><div class="day-num"><span>Day</span><span>${num}</span></div><div class="day-content"><div class="day-title">${esc(day.title)}</div><div class="day-stops">${day.stops.slice(0,4).map(esc).join(' · ')}</div></div><div class="day-arrow">&#8594;</div></div>`).join('');
+  const daySections=Object.entries(d.dayData).map(([num,day])=>{
+    const stops=day.stops.map((s,si)=>`<div class="stop" style="animation-delay:${si*0.05+0.05}s"><div class="stop-icon"><div class="stop-dot"></div><div class="stop-line"></div></div><div><div class="stop-name">${esc(s)}</div><div class="stop-img"><span>Venue photo</span></div></div></div>`).join('');
+    return `<div class="section" id="sec-day${num}"><div class="day-section"><div class="day-header"><div class="day-big-num">${String(num).padStart(2,'0')}</div><div><div class="day-header-label">Day ${num}</div><div class="day-header-title">${esc(day.title)}</div></div></div><div class="stop-list">${stops}</div></div></div>`;
+  }).join('');
+  const hotelCards=d.hotels.map((h,i)=>`<div class="hotel-card ${i===0?'featured':''}"><div><div class="hotel-stars">${'★'.repeat(parseInt(h.stars||4))}</div><div class="hotel-name">${esc(h.name)}${i===0?` <span class="hotel-tag">${h.stars}★</span>`:''}</div></div><div class="hotel-price"><div class="price-amount">${esc(d.currency)} ${esc(h.price)}</div><div class="price-unit">per pax · twin share</div>${h.supp?`<div class="price-supp">Single supplement +${esc(d.currency)} ${esc(h.supp)}</div>`:''}</div></div>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(d.id)} — ${esc(d.destination)} | KNS Tour</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap');
+:root{--cream:#FAF8F3;--ink:#1A1814;--gold:#B8955A;--gold-light:#D4B483;--muted:#7A7570;--border:#E2DDD6;--white:#FFFFFF;--green-dark:#1A2B1B;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;line-height:1.6;}
+.cover{min-height:100vh;display:flex;flex-direction:column;background:var(--green-dark);position:relative;overflow:hidden;}
+.cover-overlay{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8955A' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.cover-content{position:relative;z-index:2;display:flex;flex-direction:column;min-height:100vh;padding:3rem;}
+.logo-bar{display:flex;justify-content:space-between;align-items:flex-start;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:#D4B483;letter-spacing:0.2em;text-transform:uppercase;}
+.itq-ref{font-size:0.7rem;font-weight:500;color:#B8955A;letter-spacing:0.25em;text-transform:uppercase;text-align:right;line-height:2;}
+.cover-main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4rem 0 2rem;}
+.cover-eyebrow{font-size:0.65rem;font-weight:500;color:#B8955A;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:1.5rem;}
+.cover-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,5.5rem);font-weight:300;color:#fff;line-height:1.05;margin-bottom:0.5rem;}
+.cover-title em{font-style:italic;color:#D4B483;}
+.cover-subtitle{font-size:0.85rem;color:rgba(255,255,255,0.45);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3rem;}
+.cover-divider{width:3rem;height:1px;background:#B8955A;margin-bottom:2rem;}
+.cover-meta{display:flex;gap:0;flex-wrap:wrap;}
+.cover-meta-item{padding-right:2.5rem;border-right:1px solid rgba(184,149,90,0.3);padding-left:2.5rem;margin-bottom:1rem;}
+.cover-meta-item:first-child{padding-left:0;}
+.meta-label{font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.3rem;}
+.meta-value{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;}
+.cover-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);flex-wrap:wrap;gap:1rem;}
+.prepared-for{font-size:0.65rem;font-weight:500;color:rgba(255,255,255,0.4);letter-spacing:0.25em;text-transform:uppercase;}
+.prepared-for strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:#fff;letter-spacing:0.05em;text-transform:none;margin-top:0.25rem;}
+.agent-info{text-align:right;font-size:0.7rem;line-height:1.8;color:rgba(255,255,255,0.4);}
+.agent-info strong{display:block;font-size:0.75rem;font-weight:500;color:#D4B483;letter-spacing:0.1em;}
+.nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E2DDD6;display:flex;overflow-x:auto;}
+.nav-btn{flex-shrink:0;padding:1rem 1.5rem;font-family:'Jost',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#7A7570;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.nav-btn:hover{color:#1A1814;}.nav-btn.active{color:#B8955A;border-bottom-color:#B8955A;}
+.section{display:none;}.section.active{display:block;}
+.overview,.day-section,.pricing-section{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+.section-eyebrow{font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:1rem;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;line-height:1.1;margin-bottom:2.5rem;}
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid #E2DDD6;margin-bottom:3rem;}
+.info-cell{padding:1.5rem;border-right:1px solid #E2DDD6;border-bottom:1px solid #E2DDD6;}
+.info-cell:nth-child(2n){border-right:none;}.info-cell:nth-last-child(-n+2){border-bottom:none;}
+.info-label{font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.4rem;}
+.info-value{font-family:'Cormorant Garamond',serif;font-size:1.2rem;}
+.highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3rem;}
+.highlight-card{background:#F2EDE4;padding:1.5rem;}
+.highlight-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:#D4B483;opacity:0.5;line-height:1;margin-bottom:0.5rem;}
+.highlight-label{font-size:0.65rem;font-weight:500;color:#7A7570;letter-spacing:0.2em;text-transform:uppercase;}
+.highlight-value{font-size:0.9rem;color:#1A1814;margin-top:0.2rem;}
+.itinerary-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#E2DDD6;border:1px solid #E2DDD6;}
+.day-row{display:grid;grid-template-columns:80px 1fr auto;background:#fff;cursor:pointer;transition:background 0.15s;}
+.day-row:hover{background:#F2EDE4;}
+.day-num{padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #E2DDD6;background:#F2EDE4;}
+.day-num span:first-child{font-size:0.55rem;font-weight:500;color:#B8955A;letter-spacing:0.3em;text-transform:uppercase;}
+.day-num span:last-child{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1;}
+.day-content{padding:1.25rem 1.5rem;}.day-title{font-size:0.8rem;font-weight:500;margin-bottom:0.4rem;}
+.day-stops{font-size:0.75rem;color:#7A7570;line-height:1.6;}.day-arrow{align-self:center;padding-right:1.5rem;color:#B8955A;}
+.day-header{display:flex;align-items:flex-end;gap:2rem;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid #E2DDD6;}
+.day-big-num{font-family:'Cormorant Garamond',serif;font-size:8rem;font-weight:300;color:#D4B483;opacity:0.2;line-height:1;flex-shrink:0;}
+.day-header-label{font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.4em;text-transform:uppercase;margin-bottom:0.5rem;}
+.day-header-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;line-height:1.1;}
+.stop-list{display:flex;flex-direction:column;}
+.stop{display:grid;grid-template-columns:3rem 1fr;border-bottom:1px solid #E2DDD6;padding:1.75rem 0;animation:fadeUp 0.4s ease both;}
+.stop:last-child{border-bottom:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.stop-icon{display:flex;flex-direction:column;align-items:center;padding-top:0.25rem;}
+.stop-dot{width:8px;height:8px;border-radius:50%;background:#B8955A;flex-shrink:0;}
+.stop-line{width:1px;background:#E2DDD6;flex:1;margin-top:6px;}
+.stop:last-child .stop-line{display:none;}
+.stop-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.75rem;}
+.stop-img{height:180px;background:#F2EDE4;border:1px dashed #E2DDD6;display:flex;align-items:center;justify-content:center;max-width:400px;}
+.stop-img span{font-size:0.65rem;color:#7A7570;letter-spacing:0.2em;text-transform:uppercase;}
+.hotel-cards{display:flex;flex-direction:column;border:1px solid #E2DDD6;margin:2rem 0;}
+.hotel-card{display:grid;grid-template-columns:1fr auto;padding:1.75rem 2rem;border-bottom:1px solid #E2DDD6;transition:background 0.15s;}
+.hotel-card:last-child{border-bottom:none;}.hotel-card:hover{background:#F2EDE4;}
+.hotel-card.featured{background:#1A1814;}.hotel-card.featured:hover{background:#2a2520;}
+.hotel-stars{color:#B8955A;font-size:0.75rem;margin-bottom:0.3rem;}
+.hotel-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:0.5rem;}
+.hotel-card.featured .hotel-name{color:#fff;}
+.hotel-tag{font-size:0.55rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;padding:0.2rem 0.6rem;background:#B8955A;color:#fff;margin-left:0.5rem;}
+.hotel-price{text-align:right;}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:#B8955A;line-height:1;}
+.hotel-card.featured .price-amount{color:#D4B483;}
+.price-unit{font-size:0.6rem;color:#7A7570;letter-spacing:0.15em;text-transform:uppercase;}
+.hotel-card.featured .price-unit,.hotel-card.featured .price-supp{color:rgba(255,255,255,0.4);}
+.price-supp{font-size:0.75rem;color:#7A7570;margin-top:0.2rem;}
+.conditions{display:grid;grid-template-columns:140px 1fr;border:1px solid #E2DDD6;}
+.cond-label{padding:1.25rem 1.5rem;font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.25em;text-transform:uppercase;background:#F2EDE4;border-bottom:1px solid #E2DDD6;border-right:1px solid #E2DDD6;}
+.cond-value{padding:1.25rem 1.5rem;font-size:0.8rem;line-height:1.7;border-bottom:1px solid #E2DDD6;}
+.cond-label:last-of-type,.cond-value:last-of-type{border-bottom:none;}.excl{color:#8B3A2A;}
+@media print{.nav{display:none;}.section{display:block!important;}.cover{min-height:auto;page-break-after:always;}.day-section,.overview,.pricing-section{page-break-before:always;}.stop-img{display:none;}}
+@media(max-width:600px){.cover-content{padding:2rem 1.5rem;}.highlights{grid-template-columns:1fr;}.info-grid{grid-template-columns:1fr;}.day-big-num{font-size:5rem;}}
+</style>
+</head>
+<body>
+<div class="cover"><div class="cover-overlay"></div>
+  <div class="cover-content">
+    <div class="logo-bar"><div class="logo">KNS Tour</div><div class="itq-ref">Quote No. ${esc(d.id)}<br>${esc(d.date)}</div></div>
+    <div class="cover-main">
+      <div class="cover-eyebrow">Itinerary &amp; Quote</div>
+      <h1 class="cover-title"><em>${esc(d.destination)}</em></h1>
+      <p class="cover-subtitle">${d.nights} Nights &middot; ${d.days} Days</p>
+      <div class="cover-divider"></div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><div class="meta-label">Passengers</div><div class="meta-value">${esc(d.pax)}</div></div>
+        <div class="cover-meta-item"><div class="meta-label">Duration</div><div class="meta-value">${d.nights}N ${d.days}D</div></div>
+        ${d.hotels.length?`<div class="cover-meta-item"><div class="meta-label">From</div><div class="meta-value">${esc(d.currency)} ${esc(d.hotels[d.hotels.length-1].price)} / pax</div></div>`:''}
+      </div>
+    </div>
+    <div class="cover-footer">
+      <div class="prepared-for">Prepared for<strong>${esc(d.clientName)}${d.company?' · '+esc(d.company):''}</strong></div>
+      <div class="agent-info"><strong>Hannah Kim</strong>+82-10-3898-5835<br>hannah@knstour.com</div>
+    </div>
+  </div>
+</div>
+<nav class="nav" id="main-nav">${navBtns}</nav>
+<div class="section active" id="sec-overview">
+  <div class="overview">
+    <div class="section-eyebrow">Your Journey</div>
+    <h2 class="section-title">${esc(d.destination)}<br>${d.nights} Nights, ${d.days} Days</h2>
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-label">Client</div><div class="info-value">${esc(d.clientName)}</div></div>
+      <div class="info-cell"><div class="info-label">Company</div><div class="info-value">${esc(d.company)||'—'}</div></div>
+      <div class="info-cell"><div class="info-label">Destination</div><div class="info-value">${esc(d.destination)}</div></div>
+      <div class="info-cell"><div class="info-label">Passengers</div><div class="info-value">${esc(d.pax)}</div></div>
+      <div class="info-cell"><div class="info-label">Quote Reference</div><div class="info-value">${esc(d.id)}</div></div>
+      <div class="info-cell"><div class="info-label">Contact</div><div class="info-value">${esc(d.email)||esc(d.phone)||'—'}</div></div>
+    </div>
+    <div class="highlights">
+      <div class="highlight-card"><div class="highlight-num">${d.days}</div><div class="highlight-label">Days</div><div class="highlight-value">${d.nights} nights included</div></div>
+      <div class="highlight-card"><div class="highlight-num">${Object.values(d.dayData).reduce((a,day)=>a+day.stops.length,0)}</div><div class="highlight-label">Attractions</div><div class="highlight-value">Curated experiences</div></div>
+      <div class="highlight-card"><div class="highlight-num">${d.hotels.length}</div><div class="highlight-label">Hotel Options</div><div class="highlight-value">${d.hotels.map(h=>h.stars+'★').join(' / ')||'—'}</div></div>
+    </div>
+    <div class="itinerary-grid">${overviewRows}</div>
+  </div>
+</div>
+${daySections}
+<div class="section" id="sec-pricing">
+  <div class="pricing-section">
+    <div class="section-eyebrow">Tour Fare</div>
+    <h2 class="section-title">Accommodation<br>&amp; Pricing</h2>
+    <div class="hotel-cards">${hotelCards}</div>
+    <div class="conditions">
+      <div class="cond-label">Included</div><div class="cond-value">${esc(d.inclusions).replace(/\n/g,'<br>')}</div>
+      <div class="cond-label">Excluded</div><div class="cond-value excl">${esc(d.exclusions).replace(/\n/g,'<br>')}</div>
+      <div class="cond-label">Note</div><div class="cond-value">${esc(d.notes).replace(/\n/g,'<br>')}</div>
+    </div>
+  </div>
+</div>
+<script>
+const S=${JSON.stringify(secIds)};
+function show(id){
+  S.forEach(s=>document.getElementById('sec-'+s).classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('sec-'+id);if(el)el.classList.add('active');
+  const idx=S.indexOf(id);const btns=document.querySelectorAll('.nav-btn');
+  if(btns[idx])btns[idx].classList.add('active');
+  window.scrollTo({top:document.getElementById('main-nav').offsetTop,behavior:'smooth'});
+}
+<\/script>
+</body></html>`;
+}
+
+// ── BOOT ──
+initApp();
+</script>
+</body>
+</html>

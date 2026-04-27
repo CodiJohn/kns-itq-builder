@@ -412,7 +412,7 @@ const msalConfig = {
   auth: {
     clientId: 'efa0fb2d-addf-4b0a-aef3-43c85860eca6',
     authority: 'https://login.microsoftonline.com/common',
-    redirectUri: 'https://knstour1.sharepoint.com/sites/KSCorporationIntranet/Shared%20Documents/ITQ-Builder-OneDrive.html',
+    redirectUri: window.location.href.split('?')[0].split('#')[0],
   },
   cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: true }
 };

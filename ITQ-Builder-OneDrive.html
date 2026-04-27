@@ -7,229 +7,191 @@
 <script src="https://unpkg.com/@azure/msal-browser@3.10.0/lib/msal-browser.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap');
- 
-:root {
-  --ink:#16140F; --cream:#FAF8F3; --gold:#B8955A; --gold-light:#D4B483;
-  --muted:#7A7570; --border:#E2DDD6; --surface:#F5F2EC; --white:#FFFFFF;
-  --green-dark:#1A2B1B; --success:#2D6A4F; --danger:#8B3A2A;
-}
+:root{--ink:#16140F;--cream:#FAF8F3;--gold:#B8955A;--gold-light:#D4B483;--muted:#7A7570;--border:#E2DDD6;--surface:#F5F2EC;--white:#FFFFFF;--green-dark:#1A2B1B;--success:#2D6A4F;--danger:#8B3A2A;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
  
-/* ── LOGIN SCREEN ── */
-.login-screen{
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  background:var(--green-dark);
-  position:relative;overflow:hidden;
-}
-.login-bg{
-  position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8955A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
-}
-.login-card{
-  position:relative;z-index:2;
-  text-align:center;max-width:400px;padding:2rem;
-}
-.login-brand{
-  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;
-  color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;
-  margin-bottom:0.5rem;
-}
-.login-sub{
-  font-size:0.65rem;font-weight:500;color:rgba(255,255,255,0.3);
-  letter-spacing:0.3em;text-transform:uppercase;margin-bottom:3rem;
-}
-.login-title{
-  font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;
-  color:var(--white);margin-bottom:0.75rem;
-}
-.login-desc{
-  font-size:0.8rem;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:2.5rem;
-}
-.btn-login{
-  display:inline-flex;align-items:center;gap:0.75rem;
-  padding:0.875rem 2rem;border-radius:4px;border:none;
-  background:var(--gold);color:var(--white);
-  font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;
-  letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;width:100%;
-  justify-content:center;
-}
-.btn-login:hover{background:var(--gold-light);}
-.btn-login:disabled{opacity:0.5;cursor:not-allowed;}
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--green-dark);position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8955A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.login-card{position:relative;z-index:2;text-align:center;max-width:400px;padding:2rem;}
+.login-brand{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5rem;}
+.login-sub{font-size:0.65rem;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:3rem;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--white);margin-bottom:0.75rem;}
+.login-desc{font-size:0.8rem;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:2.5rem;}
+.btn-login{display:inline-flex;align-items:center;gap:0.75rem;padding:0.875rem 2rem;border-radius:4px;border:none;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;width:100%;justify-content:center;}
+.btn-login:hover{background:var(--gold-light);}.btn-login:disabled{opacity:0.5;cursor:not-allowed;}
 .ms-icon{width:18px;height:18px;flex-shrink:0;}
-.login-status{
-  margin-top:1.5rem;font-size:0.75rem;color:rgba(255,255,255,0.35);
-  min-height:1.2em;
-}
+.login-status{margin-top:1.5rem;font-size:0.75rem;color:rgba(255,255,255,0.35);min-height:1.2em;}
 .login-status.error{color:#F09595;}
  
-/* ── APP SHELL ── */
+/* APP */
 .app-shell{display:none;}
-.shell{display:grid;grid-template-columns:360px 1fr;min-height:100vh;}
+.shell{display:grid;grid-template-columns:340px 1fr;min-height:100vh;}
  
-/* ── LEFT ── */
+/* LEFT */
 .left{background:var(--green-dark);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
-.left-header{padding:1.5rem 2rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;}
-.brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;}
+.left-header{padding:1.25rem 1.75rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--gold-light);letter-spacing:0.2em;text-transform:uppercase;}
 .user-chip{display:flex;align-items:center;gap:0.5rem;cursor:pointer;}
-.user-avatar{width:28px;height:28px;border-radius:50%;background:rgba(184,149,90,0.2);border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:500;color:var(--gold);}
-.user-name{font-size:0.65rem;color:rgba(255,255,255,0.4);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.sync-bar{padding:0.5rem 2rem;font-size:0.65rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:rgba(184,149,90,0.2);border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:500;color:var(--gold);}
+.user-name{font-size:0.65rem;color:rgba(255,255,255,0.4);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sync-bar{padding:0.4rem 1.75rem;font-size:0.6rem;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:0.4rem;border-bottom:1px solid rgba(255,255,255,0.05);}
 .sync-dot{width:5px;height:5px;border-radius:50%;background:#2D6A4F;flex-shrink:0;}
 .sync-dot.syncing{background:var(--gold);animation:pulse 1s ease-in-out infinite;}
 .sync-dot.error{background:#8B3A2A;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
  
-.steps{padding:1.25rem 2rem;flex:1;}
-.step-item{display:flex;gap:1rem;align-items:flex-start;padding:0.65rem 0;cursor:pointer;opacity:0.4;transition:opacity 0.2s;}
+.steps{padding:1rem 1.75rem;flex:1;}
+.step-item{display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;cursor:pointer;opacity:0.4;transition:opacity 0.2s;}
 .step-item.active{opacity:1;}.step-item.done{opacity:0.65;}.step-item:hover{opacity:0.8;}
-.step-num{width:24px;height:24px;border-radius:50%;border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:500;color:var(--gold);flex-shrink:0;transition:all 0.2s;}
+.step-num{width:22px;height:22px;border-radius:50%;border:1px solid rgba(184,149,90,0.4);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:500;color:var(--gold);flex-shrink:0;}
 .step-item.active .step-num{background:var(--gold);color:var(--green-dark);border-color:var(--gold);}
 .step-item.done .step-num{background:rgba(184,149,90,0.15);border-color:var(--gold);}
-.step-label{font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.4);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.1rem;}
+.step-label{font-size:0.55rem;font-weight:500;color:rgba(255,255,255,0.35);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.1rem;}
 .step-item.active .step-label{color:var(--gold-light);}
-.step-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:300;color:rgba(255,255,255,0.65);}
+.step-name{font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:300;color:rgba(255,255,255,0.6);}
 .step-item.active .step-name{color:var(--white);}
-.step-connector{width:1px;height:16px;background:rgba(255,255,255,0.07);margin-left:calc(2rem + 12px);}
+.step-connector{width:1px;height:12px;background:rgba(255,255,255,0.07);margin-left:calc(1.75rem + 11px);}
  
-/* ITQ list in sidebar */
-.itq-list-header{padding:0.75rem 2rem 0.5rem;font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.25);letter-spacing:0.3em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
-.itq-list{padding:0 1rem 1rem;max-height:220px;overflow-y:auto;}
-.itq-list-item{padding:0.6rem 1rem;border-radius:6px;cursor:pointer;transition:background 0.15s;margin-bottom:2px;}
-.itq-list-item:hover{background:rgba(255,255,255,0.05);}
-.itq-list-id{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.2em;font-family:'DM Sans',sans-serif;}
-.itq-list-name{font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.itq-list-status{font-size:0.6rem;padding:1px 6px;border-radius:10px;display:inline-block;margin-top:3px;}
-.status-rfq{background:rgba(56,138,221,0.15);color:#85B7EB;}
-.status-sent{background:rgba(186,117,23,0.15);color:var(--gold);}
-.status-confirmed{background:rgba(45,106,79,0.15);color:#5DCAA5;}
-.status-lost{background:rgba(139,58,42,0.15);color:#F09595;}
+.itq-list-hdr{padding:0.6rem 1.75rem 0.4rem;font-size:0.55rem;font-weight:500;color:rgba(255,255,255,0.2);letter-spacing:0.3em;text-transform:uppercase;display:flex;justify-content:space-between;}
+.itq-list{padding:0 0.75rem 0.75rem;max-height:180px;overflow-y:auto;}
+.itq-li{padding:0.5rem 1rem;border-radius:5px;cursor:pointer;transition:background 0.15s;margin-bottom:2px;}
+.itq-li:hover{background:rgba(255,255,255,0.05);}
+.itq-li-id{font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.2em;}
+.itq-li-name{font-size:0.72rem;color:rgba(255,255,255,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.itq-li-status{font-size:0.58rem;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;}
+.s-rfq{background:rgba(56,138,221,0.15);color:#85B7EB;}
+.s-sent{background:rgba(186,117,23,0.15);color:var(--gold);}
+.s-conf{background:rgba(45,106,79,0.15);color:#5DCAA5;}
+.s-lost{background:rgba(139,58,42,0.15);color:#F09595;}
  
-.left-preview{margin:0 1.25rem 1.25rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;}
-.lp-id{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.3rem;}
-.lp-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:var(--white);margin-bottom:0.65rem;line-height:1.3;}
-.lp-rows{display:flex;flex-direction:column;gap:0.3rem;}
-.lp-row{display:flex;justify-content:space-between;font-size:0.68rem;}
-.lp-key{color:rgba(255,255,255,0.3);}.lp-val{color:rgba(255,255,255,0.65);font-weight:500;}
+.left-preview{margin:0 1rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:7px;padding:1rem;}
+.lp-id{font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.25rem;}
+.lp-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:300;color:var(--white);margin-bottom:0.5rem;line-height:1.3;}
+.lp-rows{display:flex;flex-direction:column;gap:0.25rem;}
+.lp-row{display:flex;justify-content:space-between;font-size:0.65rem;}
+.lp-key{color:rgba(255,255,255,0.3);}.lp-val{color:rgba(255,255,255,0.65);font-weight:500;text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
  
-/* ── RIGHT ── */
-.right{padding:3rem 3rem 6rem;max-width:720px;}
+/* RIGHT */
+.right{padding:2.5rem 2.5rem 5rem;max-width:700px;}
 .step-panel{display:none;}.step-panel.active{display:block;}
-.panel-eyebrow{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.4em;text-transform:uppercase;margin-bottom:0.75rem;}
-.panel-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;line-height:1.1;margin-bottom:2.5rem;}
+.panel-eyebrow{font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.4em;text-transform:uppercase;margin-bottom:0.6rem;}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1.1;margin-bottom:2rem;}
  
 /* Form */
-.field-group{margin-bottom:1.75rem;}
-.field-row{display:grid;gap:1rem;}
-.field-row.cols-2{grid-template-columns:1fr 1fr;}
-.field-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
-label{display:block;font-size:0.6rem;font-weight:500;color:var(--muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;}
-input[type=text],input[type=email],input[type=number],select,textarea{width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:300;color:var(--ink);transition:border-color 0.15s;appearance:none;}
+.field-group{margin-bottom:1.5rem;}
+.field-row{display:grid;gap:0.875rem;}
+.field-row.c2{grid-template-columns:1fr 1fr;}.field-row.c3{grid-template-columns:1fr 1fr 1fr;}
+label{display:block;font-size:0.58rem;font-weight:500;color:var(--muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.4rem;}
+input[type=text],input[type=email],input[type=number],select,textarea{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:300;color:var(--ink);transition:border-color 0.15s;appearance:none;}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
-textarea{resize:vertical;min-height:80px;line-height:1.6;}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7570' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
-.field-hint{font-size:0.7rem;color:var(--muted);margin-top:0.4rem;}
+textarea{resize:vertical;min-height:72px;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7570' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.9rem center;padding-right:2.2rem;}
+.field-hint{font-size:0.68rem;color:var(--muted);margin-top:0.35rem;}
+ 
+/* Search dropdown */
+.search-wrap{position:relative;}
+.search-input{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:300;color:var(--ink);}
+.search-input:focus{outline:none;border-color:var(--gold);}
+.dropdown-list{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;max-height:200px;overflow-y:auto;z-index:100;display:none;}
+.dropdown-list.open{display:block;}
+.dropdown-item{padding:0.6rem 0.9rem;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.1s;}
+.dropdown-item:last-child{border-bottom:none;}
+.dropdown-item:hover{background:var(--surface);}
+.di-name{font-size:0.82rem;font-weight:500;color:var(--ink);}
+.di-meta{font-size:0.7rem;color:var(--muted);margin-top:1px;}
+.di-tags{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap;}
+.di-tag{font-size:0.58rem;padding:1px 6px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--muted);}
+.selected-items{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.5rem;}
+.selected-item{display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.6rem 0.8rem;}
+.si-info{flex:1;}
+.si-name{font-size:0.82rem;font-weight:500;color:var(--ink);}
+.si-desc{font-size:0.7rem;color:var(--muted);margin-top:2px;line-height:1.4;}
+.si-remove{font-size:1rem;color:var(--muted);cursor:pointer;padding:0 0.2rem;flex-shrink:0;line-height:1;}
+.si-remove:hover{color:var(--danger);}
  
 /* Day tabs */
-.day-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;}
-.day-tab{padding:0.75rem 1.25rem;font-size:0.7rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;margin-bottom:-1px;}
+.day-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto;}
+.day-tab{flex-shrink:0;padding:0.65rem 1.1rem;font-size:0.65rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;margin-bottom:-1px;}
 .day-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 .day-panel{display:none;}.day-panel.active{display:block;}
  
 /* Hotels */
-.hotel-rows{display:flex;flex-direction:column;gap:1rem;}
-.hotel-row{display:grid;grid-template-columns:1fr 70px 100px 100px auto;gap:0.75rem;align-items:end;}
-.remove-btn{width:36px;height:36px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
-.remove-btn:hover{border-color:var(--danger);color:var(--danger);}
-.add-hotel-btn{margin-top:0.75rem;padding:0.6rem 1rem;border:1px dashed var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;width:100%;transition:all 0.15s;}
+.hotel-rows{display:flex;flex-direction:column;gap:0.75rem;}
+.hotel-row{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.875rem;}
+.hotel-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;}
+.hotel-row-title{font-size:0.75rem;font-weight:500;color:var(--ink);}
+.hotel-row-grid{display:grid;grid-template-columns:1fr 70px 100px 100px;gap:0.6rem;align-items:end;}
+.remove-btn{font-size:0.7rem;color:var(--muted);cursor:pointer;padding:0.2rem 0.5rem;border:1px solid var(--border);border-radius:3px;background:none;}
+.remove-btn:hover{color:var(--danger);border-color:var(--danger);}
+.add-hotel-btn{margin-top:0.6rem;padding:0.5rem 0.875rem;border:1px dashed var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.72rem;cursor:pointer;width:100%;transition:all 0.15s;}
 .add-hotel-btn:hover{border-color:var(--gold);color:var(--gold);}
  
 /* Tags */
-.tag-select{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;}
-.tag-option{padding:0.35rem 0.85rem;border:1px solid var(--border);border-radius:20px;font-size:0.75rem;color:var(--muted);cursor:pointer;transition:all 0.15s;user-select:none;}
+.tag-select{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem;}
+.tag-option{padding:0.3rem 0.75rem;border:1px solid var(--border);border-radius:20px;font-size:0.72rem;color:var(--muted);cursor:pointer;transition:all 0.15s;user-select:none;}
 .tag-option.selected{border-color:var(--gold);background:var(--gold);color:var(--white);}
  
 /* AI box */
-.ai-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;}
-.ai-box-label{font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
-.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;}
-.ai-textarea{width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:300;color:var(--ink);resize:vertical;min-height:90px;line-height:1.6;margin-bottom:0.75rem;}
+.ai-box{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1.25rem;margin-bottom:1.75rem;}
+.ai-box-label{font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;}
+.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;}
+.ai-textarea{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:4px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:300;color:var(--ink);resize:vertical;min-height:80px;line-height:1.6;margin-bottom:0.6rem;}
 .ai-textarea:focus{outline:none;border-color:var(--gold);}
-.ai-extract-btn{padding:0.6rem 1.25rem;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:0.5rem;}
-.ai-extract-btn:hover{background:var(--gold);color:var(--white);}
-.ai-extract-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.ai-btn{padding:0.5rem 1rem;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:0.4rem;}
+.ai-btn:hover{background:var(--gold);color:var(--white);}
+.ai-btn:disabled{opacity:0.5;cursor:not-allowed;}
  
-/* Nav buttons */
-.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);}
-.btn-back{padding:0.75rem 1.5rem;border:1px solid var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
+/* Nav btns */
+.nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.btn-back{padding:0.65rem 1.25rem;border:1px solid var(--border);border-radius:4px;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
 .btn-back:hover{border-color:var(--ink);color:var(--ink);}
-.btn-next{padding:0.75rem 2rem;border-radius:4px;border:none;background:var(--ink);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
+.btn-next{padding:0.65rem 1.75rem;border-radius:4px;border:none;background:var(--ink);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all 0.15s;}
 .btn-next:hover{background:var(--gold);}
-.btn-generate{padding:0.875rem 2.5rem;border-radius:4px;border:none;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-generate{padding:0.75rem 2rem;border-radius:4px;border:none;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
 .btn-generate:hover{background:var(--ink);}
-.btn-generate:disabled{opacity:0.5;cursor:not-allowed;}
- 
-/* Save status */
-.save-status{font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
-.save-status.saving{color:var(--gold);}
-.save-status.saved{color:var(--success);}
-.save-status.error{color:var(--danger);}
  
 /* Success */
-.success-box{background:var(--green-dark);border-radius:12px;padding:3rem 2.5rem;text-align:center;margin-top:2rem;}
-.success-icon{font-size:2rem;color:var(--gold-light);margin-bottom:1rem;}
-.success-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:0.5rem;}
-.success-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:2rem;line-height:1.7;}
-.btn-dl{display:inline-block;padding:0.875rem 2rem;border-radius:4px;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;margin:0.25rem;}
+.success-box{background:var(--green-dark);border-radius:10px;padding:2.5rem 2rem;text-align:center;margin-top:1.5rem;}
+.success-icon{font-size:1.8rem;color:var(--gold-light);margin-bottom:0.75rem;}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--white);margin-bottom:0.4rem;}
+.success-sub{font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;line-height:1.7;}
+.btn-dl{display:inline-block;padding:0.75rem 1.75rem;border-radius:4px;background:var(--gold);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;margin:0.2rem;}
 .btn-dl:hover{background:var(--gold-light);}
-.btn-new{display:inline-block;padding:0.875rem 1.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin:0.25rem;}
+.btn-new{display:inline-block;padding:0.75rem 1.25rem;border-radius:4px;border:1px solid rgba(255,255,255,0.2);background:none;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;margin:0.2rem;}
 .btn-new:hover{border-color:rgba(255,255,255,0.5);color:var(--white);}
  
 /* Spinner */
-.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
 .spinner.dark{border-color:rgba(184,149,90,0.3);border-top-color:var(--gold);}
 @keyframes spin{to{transform:rotate(360deg)}}
+.divider{height:1px;background:var(--border);margin:1.5rem 0;}
  
-.divider{height:1px;background:var(--border);margin:2rem 0;}
- 
-@media(max-width:800px){
-  .shell{grid-template-columns:1fr;}
-  .left{position:relative;height:auto;}
-  .right{padding:2rem 1.5rem 4rem;}
-  .field-row.cols-2,.field-row.cols-3{grid-template-columns:1fr;}
-  .hotel-row{grid-template-columns:1fr 1fr;}
-}
+@media(max-width:800px){.shell{grid-template-columns:1fr;}.left{position:relative;height:auto;}.right{padding:1.75rem 1.25rem 4rem;}.field-row.c2,.field-row.c3{grid-template-columns:1fr;}.hotel-row-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
  
-<!-- ── LOGIN SCREEN ── -->
+<!-- LOGIN -->
 <div id="login-screen" class="login-screen">
   <div class="login-bg"></div>
   <div class="login-card">
     <div class="login-brand">KNS Tour</div>
-    <div class="login-sub">ITQ Builder</div>
+    <div class="login-sub">ITQ Builder v2</div>
     <h2 class="login-title">Sign in to continue</h2>
-    <p class="login-desc">Your ITQs are stored in your team's OneDrive.<br>Sign in with your Microsoft 365 account to access and save them.</p>
+    <p class="login-desc">Your ITQs and venue database are stored in OneDrive.<br>Sign in with your Microsoft 365 account.</p>
     <button class="btn-login" id="login-btn" onclick="signIn()">
-      <svg class="ms-icon" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-        <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-        <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-        <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-      </svg>
+      <svg class="ms-icon" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
       Sign in with Microsoft
     </button>
     <div class="login-status" id="login-status"></div>
   </div>
 </div>
  
-<!-- ── APP ── -->
+<!-- APP -->
 <div id="app-shell" class="app-shell">
 <div class="shell">
- 
-  <!-- LEFT -->
   <aside class="left">
     <div class="left-header">
       <div class="brand">KNS Tour</div>
@@ -238,30 +200,20 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="user-name" id="user-name-display">...</div>
       </div>
     </div>
- 
-    <div class="sync-bar">
-      <div class="sync-dot" id="sync-dot"></div>
-      <span id="sync-label">Connected to OneDrive</span>
-    </div>
- 
-    <nav class="steps" id="step-nav">
-      <div class="step-item active" onclick="goStep(0)" id="snav-0"><div class="step-num">1</div><div class="step-info"><div class="step-label">Step 1</div><div class="step-name">Client Info</div></div></div>
+    <div class="sync-bar"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">Connecting…</span></div>
+    <nav class="steps">
+      <div class="step-item active" onclick="goStep(0)" id="snav-0"><div class="step-num">1</div><div class="step-info"><div class="step-label">Step 1</div><div class="step-name">Client</div></div></div>
       <div class="step-connector"></div>
       <div class="step-item" onclick="goStep(1)" id="snav-1"><div class="step-num">2</div><div class="step-info"><div class="step-label">Step 2</div><div class="step-name">Trip Details</div></div></div>
       <div class="step-connector"></div>
       <div class="step-item" onclick="goStep(2)" id="snav-2"><div class="step-num">3</div><div class="step-info"><div class="step-label">Step 3</div><div class="step-name">Itinerary</div></div></div>
       <div class="step-connector"></div>
-      <div class="step-item" onclick="goStep(3)" id="snav-3"><div class="step-num">4</div><div class="step-info"><div class="step-label">Step 4</div><div class="step-name">Pricing</div></div></div>
+      <div class="step-item" onclick="goStep(3)" id="snav-3"><div class="step-num">4</div><div class="step-info"><div class="step-label">Step 4</div><div class="step-name">Hotels</div></div></div>
       <div class="step-connector"></div>
-      <div class="step-item" onclick="goStep(4)" id="snav-4"><div class="step-num">5</div><div class="step-info"><div class="step-label">Step 5</div><div class="step-name">Generate ITQ</div></div></div>
+      <div class="step-item" onclick="goStep(4)" id="snav-4"><div class="step-num">5</div><div class="step-info"><div class="step-label">Step 5</div><div class="step-name">Generate</div></div></div>
     </nav>
- 
-    <div class="itq-list-header">
-      <span>Recent ITQs</span>
-      <span id="itq-count" style="color:rgba(255,255,255,0.2)"></span>
-    </div>
-    <div class="itq-list" id="itq-list"><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">Loading...</div></div>
- 
+    <div class="itq-list-hdr"><span>Recent ITQs</span><span id="itq-count" style="color:rgba(255,255,255,0.2)"></span></div>
+    <div class="itq-list" id="itq-list"><div style="font-size:0.68rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">Loading…</div></div>
     <div class="left-preview">
       <div class="lp-id" id="lp-id">KS ——</div>
       <div class="lp-name" id="lp-name">New Itinerary</div>
@@ -274,64 +226,76 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     </div>
   </aside>
  
-  <!-- RIGHT -->
   <main class="right">
  
-    <!-- STEP 1 -->
+    <!-- STEP 1: CLIENT -->
     <div class="step-panel active" id="panel-0">
       <div class="panel-eyebrow">Step 1 of 5</div>
       <h2 class="panel-title">Client<br>Information</h2>
       <div class="ai-box">
-        <div class="ai-box-label"><div class="ai-dot"></div>AI Autofill — paste an email or message</div>
-        <textarea class="ai-textarea" id="ai-input" placeholder="Paste the client's email, WhatsApp message, or any text — Claude will extract all details automatically..."></textarea>
-        <button class="ai-extract-btn" id="ai-btn" onclick="aiExtract()"><span id="ai-btn-text">Extract details</span></button>
+        <div class="ai-box-label"><div class="ai-dot"></div>AI Autofill — paste email or message</div>
+        <textarea class="ai-textarea" id="ai-input" placeholder="Paste a client email, WhatsApp message, or RFQ — Claude will extract all details automatically…"></textarea>
+        <button class="ai-btn" id="ai-btn" onclick="aiExtract()"><span id="ai-btn-text">Extract details</span></button>
       </div>
+ 
       <div class="field-group">
-        <div class="field-row cols-2">
-          <div><label>Quote Number</label><input type="text" id="f-id" placeholder="KS0001" oninput="syncPreview()"></div>
-          <div><label>Date</label><input type="text" id="f-date" placeholder="e.g. 2 July 2025" oninput="syncPreview()"></div>
+        <label>Select existing client</label>
+        <div class="search-wrap">
+          <input class="search-input" id="client-search" placeholder="Search client or company…" oninput="filterDropdown('client-search','client-dropdown','clients')" onfocus="openDropdown('client-dropdown')" onblur="setTimeout(()=>closeDropdown('client-dropdown'),200)">
+          <div class="dropdown-list" id="client-dropdown"></div>
         </div>
+        <div class="field-hint">Or fill in below for a new client</div>
       </div>
+ 
       <div class="field-group">
-        <div class="field-row cols-2">
+        <div class="field-row c2">
           <div><label>Client Name</label><input type="text" id="f-client" placeholder="e.g. Linda Lim" oninput="syncPreview()"></div>
           <div><label>Company</label><input type="text" id="f-company" placeholder="e.g. Cruise Travel" oninput="syncPreview()"></div>
         </div>
       </div>
       <div class="field-group">
-        <div class="field-row cols-2">
-          <div><label>Email</label><input type="email" id="f-email" placeholder="client@company.com" oninput="syncPreview()"></div>
-          <div><label>Phone</label><input type="text" id="f-phone" placeholder="+65 9xxx xxxx" oninput="syncPreview()"></div>
+        <div class="field-row c2">
+          <div><label>Email</label><input type="email" id="f-email" placeholder="client@company.com"></div>
+          <div><label>Phone</label><input type="text" id="f-phone" placeholder="+65 9xxx xxxx"></div>
         </div>
       </div>
-      <div class="nav-btns">
-        <div class="save-status" id="save-status-0"></div>
-        <button class="btn-next" onclick="goStep(1)">Next — Trip Details →</button>
+      <div class="field-group">
+        <div class="field-row c2">
+          <div><label>Date</label><input type="text" id="f-date" placeholder="e.g. 2 July 2025"></div>
+          <div><label>Country / Origin</label><input type="text" id="f-country" placeholder="e.g. Singapore"></div>
+        </div>
       </div>
+      <div class="nav-btns"><span></span><button class="btn-next" onclick="goStep(1)">Next — Trip Details →</button></div>
     </div>
  
-    <!-- STEP 2 -->
+    <!-- STEP 2: TRIP -->
     <div class="step-panel" id="panel-1">
       <div class="panel-eyebrow">Step 2 of 5</div>
       <h2 class="panel-title">Trip<br>Details</h2>
       <div class="field-group">
-        <div class="field-row cols-2">
+        <div class="field-row c2">
           <div><label>Destination</label><input type="text" id="f-dest" placeholder="e.g. Jeju Island, Korea" oninput="syncPreview()"></div>
-          <div><label>Passengers</label><input type="text" id="f-pax" placeholder="e.g. 450 Pax" oninput="syncPreview()"></div>
+          <div><label>Passengers</label><input type="text" id="f-pax" placeholder="e.g. 30 pax" oninput="syncPreview()"></div>
         </div>
       </div>
       <div class="field-group">
-        <div class="field-row cols-3">
-          <div><label>Nights</label><input type="number" id="f-nights" placeholder="4" min="1" max="14" value="4" oninput="syncPreview();buildDayTabs()"></div>
-          <div><label>Days</label><input type="number" id="f-days" placeholder="5" min="1" max="15" value="5" oninput="syncPreview();buildDayTabs()"></div>
+        <div class="field-row c3">
+          <div><label>Nights</label><input type="number" id="f-nights" min="1" max="14" value="4" oninput="syncPreview();buildDayTabs()"></div>
+          <div><label>Days</label><input type="number" id="f-days" min="1" max="15" value="5" oninput="syncPreview();buildDayTabs()"></div>
           <div><label>Currency</label>
             <select id="f-currency">
-              <option value="SGD">SGD</option><option value="KRW">KRW</option>
-              <option value="USD">USD</option><option value="JPY">JPY</option>
-              <option value="MYR">MYR</option><option value="THB">THB</option>
+              <option value="SGD">SGD</option><option value="USD">USD</option>
+              <option value="KRW">KRW</option><option value="MYR">MYR</option>
+              <option value="JPY">JPY</option><option value="THB">THB</option>
             </select>
           </div>
         </div>
+      </div>
+      <div class="field-group">
+        <label>Transport</label>
+        <select id="f-transport">
+          <option value="">Select transport…</option>
+        </select>
       </div>
       <div class="field-group">
         <label>Tags</label>
@@ -341,73 +305,69 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
           <div class="tag-option" onclick="toggleTag(this)">Family</div>
           <div class="tag-option" onclick="toggleTag(this)">Honeymoon</div>
           <div class="tag-option" onclick="toggleTag(this)">Corporate</div>
+          <div class="tag-option" onclick="toggleTag(this)">Incentive</div>
           <div class="tag-option" onclick="toggleTag(this)">Group</div>
           <div class="tag-option" onclick="toggleTag(this)">Solo</div>
           <div class="tag-option" onclick="toggleTag(this)">Cultural</div>
           <div class="tag-option" onclick="toggleTag(this)">Beach</div>
+          <div class="tag-option" onclick="toggleTag(this)">Ski</div>
           <div class="tag-option" onclick="toggleTag(this)">Nature</div>
           <div class="tag-option" onclick="toggleTag(this)">Historical</div>
           <div class="tag-option" onclick="toggleTag(this)">Romantic</div>
           <div class="tag-option" onclick="toggleTag(this)">Island</div>
           <div class="tag-option" onclick="toggleTag(this)">City</div>
-          <div class="tag-option" onclick="toggleTag(this)">Adventure</div>
         </div>
       </div>
-      <div class="nav-btns">
-        <button class="btn-back" onclick="goStep(0)">← Back</button>
-        <button class="btn-next" onclick="goStep(2)">Next — Itinerary →</button>
-      </div>
+      <div class="nav-btns"><button class="btn-back" onclick="goStep(0)">← Back</button><button class="btn-next" onclick="goStep(2)">Next — Itinerary →</button></div>
     </div>
  
-    <!-- STEP 3 -->
+    <!-- STEP 3: ITINERARY -->
     <div class="step-panel" id="panel-2">
       <div class="panel-eyebrow">Step 3 of 5</div>
       <h2 class="panel-title">Day by Day<br>Itinerary</h2>
       <div class="day-tabs" id="day-tabs"></div>
       <div id="day-panels"></div>
-      <div class="nav-btns">
-        <button class="btn-back" onclick="goStep(1)">← Back</button>
-        <button class="btn-next" onclick="goStep(3)">Next — Pricing →</button>
-      </div>
+      <div class="nav-btns"><button class="btn-back" onclick="goStep(1)">← Back</button><button class="btn-next" onclick="goStep(3)">Next — Hotels →</button></div>
     </div>
  
-    <!-- STEP 4 -->
+    <!-- STEP 4: HOTELS -->
     <div class="step-panel" id="panel-3">
       <div class="panel-eyebrow">Step 4 of 5</div>
       <h2 class="panel-title">Hotels<br>&amp; Pricing</h2>
       <div class="field-group">
-        <label>Hotel Options</label>
-        <div class="hotel-rows" id="hotel-rows"></div>
-        <button class="add-hotel-btn" onclick="addHotel()">+ Add hotel option</button>
+        <label>Add hotel option</label>
+        <div class="search-wrap">
+          <input class="search-input" id="hotel-search" placeholder="Search hotels by name or location…" oninput="filterDropdown('hotel-search','hotel-dropdown','hotels')" onfocus="openDropdown('hotel-dropdown')" onblur="setTimeout(()=>closeDropdown('hotel-dropdown'),200)">
+          <div class="dropdown-list" id="hotel-dropdown"></div>
+        </div>
+        <div class="field-hint">Search and select hotels, then set pricing below</div>
       </div>
+      <div class="hotel-rows" id="hotel-rows"></div>
+      <button class="add-hotel-btn" onclick="addHotel()">+ Add custom hotel</button>
       <div class="divider"></div>
-      <div class="field-group"><label>Inclusions</label><textarea id="f-inc" placeholder="e.g. 4 hotel breakfasts · 4 local lunches&#10;45-seat deluxe coach with driver and guide&#10;All attraction admission fees"></textarea></div>
-      <div class="field-group"><label>Exclusions</label><textarea id="f-exc" placeholder="e.g. Tips for guides and drivers — USD 5/pax/day"></textarea></div>
+      <div class="field-group"><label>Inclusions</label><textarea id="f-inc" placeholder="e.g. 4 hotel breakfasts · 4 local lunches · 4 local dinners&#10;45-seat deluxe coach with driver and guide&#10;All attraction admission fees"></textarea></div>
+      <div class="field-group"><label>Exclusions</label><textarea id="f-exc" placeholder="e.g. Tips for guides and drivers — USD 5/pax/day or SGD 7/pax/day"></textarea></div>
       <div class="field-group"><label>Notes</label><textarea id="f-notes" placeholder="e.g. The itinerary is subject to change based on local conditions."></textarea></div>
-      <div class="nav-btns">
-        <button class="btn-back" onclick="goStep(2)">← Back</button>
-        <button class="btn-next" onclick="goStep(4)">Next — Generate →</button>
-      </div>
+      <div class="nav-btns"><button class="btn-back" onclick="goStep(2)">← Back</button><button class="btn-next" onclick="goStep(4)">Next — Generate →</button></div>
     </div>
  
-    <!-- STEP 5 -->
+    <!-- STEP 5: GENERATE -->
     <div class="step-panel" id="panel-4">
       <div class="panel-eyebrow">Step 5 of 5</div>
-      <h2 class="panel-title">Generate<br>Your ITQ</h2>
-      <div id="gen-summary" style="background:var(--surface);border-radius:8px;padding:1.5rem;margin-bottom:2rem;font-size:0.85rem;line-height:1.8;"></div>
+      <h2 class="panel-title">Review &amp;<br>Generate ITQ</h2>
+      <div id="gen-summary" style="background:var(--surface);border-radius:7px;padding:1.25rem;margin-bottom:1.5rem;font-size:0.83rem;line-height:1.8;"></div>
       <div class="nav-btns">
         <button class="btn-back" onclick="goStep(3)">← Back</button>
         <button class="btn-generate" id="gen-btn" onclick="generateITQ()">Generate &amp; Save ITQ</button>
       </div>
       <div id="success-area"></div>
     </div>
- 
   </main>
 </div>
 </div>
  
 <script>
-// ── MSAL CONFIG ──
+// ── MSAL ──
 const msalConfig = {
   auth: {
     clientId: 'efa0fb2d-addf-4b0a-aef3-43c85860eca6',
@@ -416,300 +376,229 @@ const msalConfig = {
   },
   cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: true }
 };
- 
-const loginRequest = {
-  scopes: ['User.Read', 'Files.ReadWrite']
-};
- 
+const loginRequest = { scopes: ['User.Read', 'Files.ReadWrite'] };
 const msalInstance = new msal.PublicClientApplication(msalConfig);
-let currentUser = null;
-let accessToken = null;
+let currentUser = null, accessToken = null;
 const FOLDER = 'KNSTour-ITQ';
-let itqDatabase = [];
-let hotels = [];
-let saveTimer = null;
-let currentEditId = null;
+let itqDatabase = [], db = { venues:[], restaurants:[], hotels:[], clients:[], transport:[], meta:{nextKSNumber:132} };
+let hotels = [], saveTimer = null;
  
 // ── AUTH ──
 async function initApp() {
   await msalInstance.initialize();
   const resp = await msalInstance.handleRedirectPromise();
-  if (resp) {
-    currentUser = resp.account;
-    accessToken = resp.accessToken;
-    showApp();
-    return;
-  }
+  if (resp) { currentUser = resp.account; accessToken = resp.accessToken; showApp(); return; }
   const accounts = msalInstance.getAllAccounts();
   if (accounts.length > 0) {
     currentUser = accounts[0];
-    try {
-      const tokenResp = await msalInstance.acquireTokenSilent({ ...loginRequest, account: currentUser });
-      accessToken = tokenResp.accessToken;
-      showApp();
-    } catch(e) {
-      showLogin();
-    }
-  } else {
-    showLogin();
-  }
+    try { const r = await msalInstance.acquireTokenSilent({...loginRequest,account:currentUser}); accessToken=r.accessToken; showApp(); }
+    catch(e) { showLogin(); }
+  } else { showLogin(); }
 }
- 
 async function signIn() {
-  const btn = document.getElementById('login-btn');
-  const status = document.getElementById('login-status');
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spinner"></span> Signing in…`;
-  status.textContent = '';
+  const btn=document.getElementById('login-btn'), status=document.getElementById('login-status');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Signing in…'; status.textContent='';
   try {
-    const resp = await msalInstance.loginPopup(loginRequest);
-    currentUser = resp.account;
-    accessToken = resp.accessToken;
-    showApp();
+    const r=await msalInstance.loginPopup(loginRequest);
+    currentUser=r.account; accessToken=r.accessToken; showApp();
   } catch(e) {
-    btn.disabled = false;
-    btn.innerHTML = `<svg class="ms-icon" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg> Sign in with Microsoft`;
+    btn.disabled=false;
+    btn.innerHTML='<svg class="ms-icon" viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg> Sign in with Microsoft';
     status.textContent = e.message?.includes('user_cancelled') ? 'Sign-in cancelled.' : 'Sign-in failed. Please try again.';
-    status.className = 'login-status error';
+    status.className='login-status error';
   }
 }
- 
 async function getToken() {
-  try {
-    const resp = await msalInstance.acquireTokenSilent({ ...loginRequest, account: currentUser });
-    accessToken = resp.accessToken;
-    return accessToken;
-  } catch(e) {
-    const resp = await msalInstance.acquireTokenPopup({ ...loginRequest, account: currentUser });
-    accessToken = resp.accessToken;
-    return accessToken;
-  }
+  try { const r=await msalInstance.acquireTokenSilent({...loginRequest,account:currentUser}); accessToken=r.accessToken; return accessToken; }
+  catch(e) { const r=await msalInstance.acquireTokenPopup({...loginRequest,account:currentUser}); accessToken=r.accessToken; return accessToken; }
 }
- 
-function signOut() {
-  if (!confirm('Sign out of KNS Tour ITQ Builder?')) return;
-  msalInstance.logout({ account: currentUser });
-}
- 
-function showLogin() {
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app-shell').style.display = 'none';
-}
- 
+function signOut() { if(!confirm('Sign out?')) return; msalInstance.logout({account:currentUser}); }
+function showLogin() { document.getElementById('login-screen').style.display='flex'; document.getElementById('app-shell').style.display='none'; }
 async function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app-shell').style.display = 'block';
-  const name = currentUser?.name || currentUser?.username || '';
-  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('user-initials').textContent = initials || '?';
-  document.getElementById('user-name-display').textContent = name.split(' ')[0];
-  buildDayTabs();
-  addHotel('','5','','');
-  addHotel('','4','','');
-  syncPreview();
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-shell').style.display='block';
+  const name=currentUser?.name||currentUser?.username||'';
+  const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('user-initials').textContent=initials||'?';
+  document.getElementById('user-name-display').textContent=name.split(' ')[0];
   await ensureFolder();
+  await loadDatabase();
   await loadITQList();
-  await autoNextId();
+  setNextKSNumber();
+  buildDayTabs();
+  addHotel();
+  populateTransport();
+  syncPreview();
 }
  
 // ── ONEDRIVE ──
-async function graphRequest(path, method='GET', body=null) {
-  const token = await getToken();
-  const opts = {
-    method,
-    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, opts);
-  if (!res.ok && res.status !== 404) throw new Error(`Graph error ${res.status}`);
-  if (res.status === 204 || res.status === 404) return null;
+async function graphRequest(path,method='GET',body=null) {
+  const token=await getToken();
+  const opts={method,headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}};
+  if(body) opts.body=JSON.stringify(body);
+  const res=await fetch(`https://graph.microsoft.com/v1.0${path}`,opts);
+  if(!res.ok&&res.status!==404) throw new Error(`Graph ${res.status}`);
+  if(res.status===204||res.status===404) return null;
   return res.json();
 }
- 
-async function graphUpload(path, content) {
-  const token = await getToken();
-  const res = await fetch(`https://graph.microsoft.com/v1.0${path}`, {
-    method: 'PUT',
-    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: content
-  });
+async function graphUpload(path,content) {
+  const token=await getToken();
+  const res=await fetch(`https://graph.microsoft.com/v1.0${path}`,{method:'PUT',headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},body:content});
   return res.json();
 }
- 
 async function ensureFolder() {
-  setSyncStatus('syncing','Connecting to OneDrive…');
+  setSyncStatus('syncing','Connecting…');
   try {
-    const check = await graphRequest(`/me/drive/root:/${FOLDER}`);
-    if (!check) {
-      await graphRequest('/me/drive/root/children', 'POST', {
-        name: FOLDER, folder: {}, '@microsoft.graph.conflictBehavior': 'rename'
-      });
-    }
+    const c=await graphRequest(`/me/drive/root:/${FOLDER}`);
+    if(!c) await graphRequest('/me/drive/root/children','POST',{name:FOLDER,folder:{}, '@microsoft.graph.conflictBehavior':'rename'});
     setSyncStatus('ok','Connected to OneDrive');
-  } catch(e) {
-    setSyncStatus('error','OneDrive connection failed');
-  }
+  } catch(e) { setSyncStatus('error','OneDrive connection failed'); }
 }
- 
+async function loadDatabase() {
+  try {
+    const data=await graphRequest(`/me/drive/root:/${FOLDER}/database.json:/content`);
+    if(data) db=data;
+  } catch(e) {
+    // Use built-in database if OneDrive version not found
+    db = BUILTIN_DB;
+    // Upload it to OneDrive for next time
+    try { await graphUpload(`/me/drive/root:/${FOLDER}/database.json:/content`, JSON.stringify(db,null,2)); } catch(e2){}
+  }
+  populateClientDropdown();
+  populateHotelDropdown();
+  populateTransport();
+}
 async function loadITQList() {
   try {
-    const data = await graphRequest(`/me/drive/root:/${FOLDER}/itqs.json:/content`);
-    if (data) {
-      itqDatabase = Array.isArray(data) ? data : [];
-    } else {
-      itqDatabase = [];
-    }
-    renderITQList();
-  } catch(e) {
-    itqDatabase = [];
-    renderITQList();
-  }
+    const data=await graphRequest(`/me/drive/root:/${FOLDER}/itqs.json:/content`);
+    itqDatabase=Array.isArray(data)?data:[];
+  } catch(e) { itqDatabase=[]; }
+  renderITQList();
 }
- 
 async function saveITQList() {
   setSyncStatus('syncing','Saving…');
-  try {
-    await graphUpload(`/me/drive/root:/${FOLDER}/itqs.json:/content`, JSON.stringify(itqDatabase, null, 2));
-    setSyncStatus('ok','Saved to OneDrive');
-  } catch(e) {
-    setSyncStatus('error','Save failed — check connection');
-  }
+  try { await graphUpload(`/me/drive/root:/${FOLDER}/itqs.json:/content`,JSON.stringify(itqDatabase,null,2)); setSyncStatus('ok','Saved to OneDrive'); }
+  catch(e) { setSyncStatus('error','Save failed'); }
 }
- 
-async function autoNextId() {
-  if (itqDatabase.length === 0) {
-    document.getElementById('f-id').value = 'KS0001';
-    syncPreview();
-    return;
+function setNextKSNumber() {
+  let next = db.meta?.nextKSNumber || 132;
+  if(itqDatabase.length>0){
+    const nums=itqDatabase.map(i=>parseInt((i.id||'KS0000').replace('KS',''))).filter(n=>!isNaN(n));
+    if(nums.length) next=Math.max(next,...nums)+1;
   }
-  const nums = itqDatabase.map(i => parseInt((i.id||'KS0000').replace('KS',''))).filter(n=>!isNaN(n));
-  const next = Math.max(...nums) + 1;
-  document.getElementById('f-id').value = 'KS' + String(next).padStart(4,'0');
-  syncPreview();
+  document.getElementById('lp-id').textContent='KS'+String(next).padStart(4,'0');
+  window._nextKS=next;
 }
- 
-function renderITQList() {
-  const el = document.getElementById('itq-list');
-  document.getElementById('itq-count').textContent = itqDatabase.length;
-  if (itqDatabase.length === 0) {
-    el.innerHTML = '<div style="font-size:0.7rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">No ITQs yet</div>';
-    return;
-  }
-  const statusClass = { 'RFQ received':'status-rfq','ITQ sent':'status-sent','Confirmed':'status-confirmed','Lost':'status-lost' };
-  el.innerHTML = [...itqDatabase].reverse().slice(0,20).map(itq => `
-    <div class="itq-list-item" onclick="loadITQ('${itq.id}')">
-      <div class="itq-list-id">${itq.id||'—'}</div>
-      <div class="itq-list-name">${itq.clientName||'Unknown'} — ${itq.destination||'—'}</div>
-      <span class="itq-list-status ${statusClass[itq.status]||'status-rfq'}">${itq.status||'RFQ received'}</span>
-    </div>`).join('');
-}
- 
-function loadITQ(id) {
-  const itq = itqDatabase.find(i=>i.id===id);
-  if (!itq) return;
-  currentEditId = id;
-  document.getElementById('f-id').value = itq.id||'';
-  document.getElementById('f-date').value = itq.date||'';
-  document.getElementById('f-client').value = itq.clientName||'';
-  document.getElementById('f-company').value = itq.company||'';
-  document.getElementById('f-email').value = itq.email||'';
-  document.getElementById('f-phone').value = itq.phone||'';
-  document.getElementById('f-dest').value = itq.destination||'';
-  document.getElementById('f-pax').value = itq.pax||'';
-  document.getElementById('f-nights').value = itq.nights||4;
-  document.getElementById('f-days').value = itq.days||5;
-  document.getElementById('f-currency').value = itq.currency||'SGD';
-  document.getElementById('f-inc').value = itq.inclusions||'';
-  document.getElementById('f-exc').value = itq.exclusions||'';
-  document.getElementById('f-notes').value = itq.notes||'';
- 
-  document.querySelectorAll('.tag-option').forEach(t => {
-    t.classList.toggle('selected', (itq.tags||[]).includes(t.textContent));
-  });
- 
-  buildDayTabs();
-  const dayData = itq.dayData||{};
-  Object.keys(dayData).forEach(k => {
-    const t = document.getElementById(`d${k}-title`);
-    const s = document.getElementById(`d${k}-stops`);
-    if (t) t.value = dayData[k].title||'';
-    if (s) s.value = (dayData[k].stops||[]).join('\n');
-  });
- 
-  hotels = []; document.getElementById('hotel-rows').innerHTML='';
-  (itq.hotels||[]).forEach(h => addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));
-  syncPreview();
-  goStep(0);
+function getNextKSNumber() {
+  const n=window._nextKS||132;
+  window._nextKS=n+1;
+  return 'KS'+String(n).padStart(4,'0');
 }
  
 // ── UI ──
-function setSyncStatus(state, msg) {
-  const dot = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-label');
-  dot.className = 'sync-dot' + (state==='syncing'?' syncing':state==='error'?' error':'');
-  label.textContent = msg;
+function setSyncStatus(state,msg){
+  document.getElementById('sync-dot').className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');
+  document.getElementById('sync-label').textContent=msg;
 }
- 
-function goStep(n) {
+function goStep(n){
   document.querySelectorAll('.step-panel').forEach((p,i)=>p.classList.toggle('active',i===n));
-  document.querySelectorAll('.step-item').forEach((s,i)=>{
-    s.classList.toggle('active',i===n);
-    s.classList.toggle('done',i<n);
-  });
-  if (n===2) buildDayTabs();
-  if (n===4) buildSummary();
+  document.querySelectorAll('.step-item').forEach((s,i)=>{s.classList.toggle('active',i===n);s.classList.toggle('done',i<n);});
+  if(n===2) buildDayTabs();
+  if(n===4) buildSummary();
   window.scrollTo({top:0,behavior:'smooth'});
 }
- 
-function toggleTag(el) { el.classList.toggle('selected'); }
-function getTags() { return [...document.querySelectorAll('.tag-option.selected')].map(t=>t.textContent); }
- 
-function syncPreview() {
-  const id = document.getElementById('f-id').value||'KS ——';
-  const client = document.getElementById('f-client').value||'—';
-  const dest = document.getElementById('f-dest').value||'—';
-  const pax = document.getElementById('f-pax').value||'—';
-  const n = document.getElementById('f-nights').value||'—';
-  const d = document.getElementById('f-days').value||'—';
-  document.getElementById('lp-id').textContent = id;
-  document.getElementById('lp-name').textContent = dest!=='—'?dest:'New Itinerary';
-  document.getElementById('lp-client').textContent = client;
-  document.getElementById('lp-dest').textContent = dest;
-  document.getElementById('lp-pax').textContent = pax;
-  document.getElementById('lp-period').textContent = n!=='—'?`${n}N ${d}D`:'—';
-  debounceSave();
+function toggleTag(el){el.classList.toggle('selected');}
+function getTags(){return[...document.querySelectorAll('.tag-option.selected')].map(t=>t.textContent);}
+function syncPreview(){
+  const id=document.getElementById('lp-id').textContent||'KS ——';
+  const client=document.getElementById('f-client').value||'—';
+  const dest=document.getElementById('f-dest').value||'—';
+  const pax=document.getElementById('f-pax').value||'—';
+  const n=document.getElementById('f-nights').value||'—';
+  const d=document.getElementById('f-days').value||'—';
+  document.getElementById('lp-name').textContent=dest!=='—'?dest:'New Itinerary';
+  document.getElementById('lp-client').textContent=client;
+  document.getElementById('lp-dest').textContent=dest;
+  document.getElementById('lp-pax').textContent=pax;
+  document.getElementById('lp-period').textContent=n!=='—'?`${n}N ${d}D`:'—';
+  clearTimeout(saveTimer); saveTimer=setTimeout(autoSave,2500);
+}
+function renderITQList(){
+  const el=document.getElementById('itq-list');
+  document.getElementById('itq-count').textContent=itqDatabase.length;
+  if(!itqDatabase.length){el.innerHTML='<div style="font-size:0.68rem;color:rgba(255,255,255,0.2);padding:0.5rem 1rem">No ITQs yet</div>';return;}
+  const sc={'RFQ received':'s-rfq','ITQ sent':'s-sent','Confirmed':'s-conf','Lost':'s-lost'};
+  el.innerHTML=[...itqDatabase].reverse().slice(0,20).map(i=>`<div class="itq-li" onclick="loadITQ('${i.id}')"><div class="itq-li-id">${i.id||'—'}</div><div class="itq-li-name">${i.clientName||'Unknown'} — ${i.destination||'—'}</div><span class="itq-li-status ${sc[i.status]||'s-rfq'}">${i.status||'RFQ received'}</span></div>`).join('');
 }
  
-function debounceSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(autoSaveDraft, 2000);
+// ── DROPDOWN SYSTEM ──
+function filterDropdown(inputId,dropdownId,dbKey){
+  const q=document.getElementById(inputId).value.toLowerCase().trim();
+  const el=document.getElementById(dropdownId);
+  const items=db[dbKey]||[];
+  const filtered=q?items.filter(i=>(i.name+' '+(i.contact||'')+' '+(i.location||'')).toLowerCase().includes(q)):items;
+  renderDropdownItems(el,filtered,dbKey,inputId);
+  openDropdown(dropdownId);
+}
+function renderDropdownItems(el,items,type,inputId){
+  if(!items.length){el.innerHTML='<div class="dropdown-item"><div class="di-name" style="color:var(--muted)">No results</div></div>';return;}
+  el.innerHTML=items.slice(0,12).map(item=>{
+    const name=item.name;
+    const meta=type==='clients'?`${item.contact||''} · ${item.country||''}`:(item.location||'')+(item.stars?` · ${item.stars}★`:'');
+    const tags=(item.tags||[]).slice(0,3).map(t=>`<span class="di-tag">${t}</span>`).join('');
+    return `<div class="dropdown-item" onmousedown="selectItem('${type}','${item.id}','${inputId}')">\
+<div class="di-name">${name}</div>\
+<div class="di-meta">${meta}</div>\
+${tags?`<div class="di-tags">${tags}</div>`:''}\
+</div>`;
+  }).join('');
+}
+function selectItem(type,id,inputId){
+  const item=(db[type]||[]).find(i=>i.id===id);
+  if(!item) return;
+  if(type==='clients'){
+    document.getElementById('f-client').value=item.contact||'';
+    document.getElementById('f-company').value=item.name||'';
+    document.getElementById('f-email').value=item.email||'';
+    document.getElementById('f-country').value=item.country||'';
+    if(item.currency) document.getElementById('f-currency').value=item.currency;
+    document.getElementById('client-search').value=item.name;
+    syncPreview();
+  } else if(type==='hotels'){
+    addHotelFromDB(item);
+    document.getElementById('hotel-search').value='';
+  }
+  closeDropdown(inputId==='client-search'?'client-dropdown':'hotel-dropdown');
+}
+function openDropdown(id){const el=document.getElementById(id);if(el)el.classList.add('open');}
+function closeDropdown(id){const el=document.getElementById(id);if(el)el.classList.remove('open');}
+function populateClientDropdown(){
+  const el=document.getElementById('client-dropdown');
+  renderDropdownItems(el,db.clients||[],'clients','client-search');
+}
+function populateHotelDropdown(){
+  const el=document.getElementById('hotel-dropdown');
+  renderDropdownItems(el,db.hotels||[],'hotels','hotel-search');
+}
+function populateTransport(){
+  const sel=document.getElementById('f-transport');
+  sel.innerHTML='<option value="">Select transport…</option>'+(db.transport||[]).map(t=>`<option value="${t.id}">${t.type} (${t.capacity||'—'} seats)</option>`).join('');
 }
  
-async function autoSaveDraft() {
-  const data = collectData();
-  if (!data.clientName && !data.destination) return;
-  const existing = itqDatabase.findIndex(i=>i.id===data.id);
-  data.status = data.status || 'RFQ received';
-  data.savedAt = new Date().toISOString();
-  if (existing >= 0) itqDatabase[existing] = data;
-  else itqDatabase.push(data);
-  renderITQList();
-  await saveITQList();
-}
- 
-function buildDayTabs() {
-  const count = parseInt(document.getElementById('f-days').value)||5;
-  const tabsEl = document.getElementById('day-tabs');
-  const panelsEl = document.getElementById('day-panels');
-  const existing = {};
-  for (let i=1; i<=15; i++) {
-    const t = document.getElementById(`d${i}-title`);
-    const s = document.getElementById(`d${i}-stops`);
-    if (t) existing[i] = { title:t.value, stops:s?.value||'' };
+// ── DAY TABS WITH VENUE SEARCH ──
+function buildDayTabs(){
+  const count=parseInt(document.getElementById('f-days').value)||5;
+  const tabsEl=document.getElementById('day-tabs');
+  const panelsEl=document.getElementById('day-panels');
+  const existing={};
+  for(let i=1;i<=15;i++){
+    const t=document.getElementById(`d${i}-title`);
+    if(t) existing[i]={title:t.value, stops:window._dayStops?.[i]||[]};
   }
   tabsEl.innerHTML=''; panelsEl.innerHTML='';
-  for (let i=1; i<=count; i++) {
-    const tab = document.createElement('button');
+  window._dayStops=window._dayStops||{};
+  for(let i=1;i<=count;i++){
+    const tab=document.createElement('button');
     tab.className='day-tab'+(i===1?' active':'');
     tab.textContent=`Day ${i}`;
     tab.onclick=()=>{
@@ -719,37 +608,99 @@ function buildDayTabs() {
       document.getElementById('dpanel-'+i).classList.add('active');
     };
     tabsEl.appendChild(tab);
+ 
+    if(!window._dayStops[i]) window._dayStops[i]=existing[i]?.stops||[];
     const panel=document.createElement('div');
     panel.className='day-panel'+(i===1?' active':'');
     panel.id='dpanel-'+i;
     panel.innerHTML=`
-      <div class="field-group"><label>Day ${i} Title</label><input type="text" id="d${i}-title" placeholder="e.g. Arrival · Coastal Highlights" value="${existing[i]?.title||''}"></div>
-      <div class="field-group"><label>Stops (one per line)</label><textarea id="d${i}-stops" style="min-height:150px" placeholder="Arrive in Jeju&#10;Dodu Rainbow Coastal Road&#10;Lunch @ Restaurant&#10;Dinner @ Black Pork">${existing[i]?.stops||''}</textarea><div class="field-hint">Each line = one stop on the day sheet</div></div>`;
+      <div class="field-group">
+        <label>Day ${i} Title</label>
+        <input type="text" id="d${i}-title" placeholder="e.g. Arrival · Coastal Highlights" value="${existing[i]?.title||''}">
+      </div>
+      <div class="field-group">
+        <label>Add venues &amp; stops</label>
+        <div class="search-wrap">
+          <input class="search-input" id="vs${i}" placeholder="Search venues, attractions, restaurants…" oninput="filterVenueDropdown(${i})" onfocus="filterVenueDropdown(${i})" onblur="setTimeout(()=>closeDropdown('vd${i}'),200)">
+          <div class="dropdown-list" id="vd${i}"></div>
+        </div>
+        <div class="field-hint">Search and add stops — they appear in order below</div>
+      </div>
+      <div class="selected-items" id="stops-${i}"></div>`;
     panelsEl.appendChild(panel);
+    renderStops(i);
   }
 }
  
-function addHotel(name='',stars='5',price='',supp='') {
-  const id=Date.now()+'_'+Math.random().toString(36).slice(2,6);
-  hotels.push(id);
+function filterVenueDropdown(dayNum){
+  const q=document.getElementById(`vs${dayNum}`).value.toLowerCase().trim();
+  const el=document.getElementById(`vd${dayNum}`);
+  const all=[...( db.venues||[]).map(v=>({...v,_type:'venue'})),...(db.restaurants||[]).map(r=>({...r,_type:'restaurant'}))];
+  const filtered=q?all.filter(i=>(i.name+' '+(i.location||'')+' '+(i.tags||[]).join(' ')).toLowerCase().includes(q)):all.slice(0,10);
+  el.innerHTML=filtered.slice(0,10).map(item=>`
+    <div class="dropdown-item" onmousedown="addStop(${dayNum},'${item.id}','${item._type}')">
+      <div class="di-name">${item.name} <span style="font-size:0.65rem;color:var(--muted)">${item._type==='restaurant'?'🍽':'📍'} ${item.location||''}</span></div>
+      <div class="di-meta">${(item.description||'').slice(0,70)}…</div>
+    </div>`).join('');
+  openDropdown(`vd${dayNum}`);
+}
+ 
+function addStop(dayNum,id,type){
+  const item=(type==='restaurant'?db.restaurants:db.venues||[]).find(i=>i.id===id);
+  if(!item) return;
+  if(!window._dayStops[dayNum]) window._dayStops[dayNum]=[];
+  if(window._dayStops[dayNum].find(s=>s.id===id)) return;
+  window._dayStops[dayNum].push({id,name:item.name,desc:item.description||'',type});
+  renderStops(dayNum);
+  document.getElementById(`vs${dayNum}`).value='';
+  closeDropdown(`vd${dayNum}`);
+}
+ 
+function removeStop(dayNum,id){
+  window._dayStops[dayNum]=(window._dayStops[dayNum]||[]).filter(s=>s.id!==id);
+  renderStops(dayNum);
+}
+ 
+function renderStops(dayNum){
+  const el=document.getElementById(`stops-${dayNum}`);
+  if(!el) return;
+  const stops=window._dayStops[dayNum]||[];
+  el.innerHTML=stops.map(s=>`
+    <div class="selected-item">
+      <div class="si-info">
+        <div class="si-name">${s.name}</div>
+        <div class="si-desc">${s.desc.slice(0,100)}${s.desc.length>100?'…':''}</div>
+      </div>
+      <span class="si-remove" onclick="removeStop(${dayNum},'${s.id}')">×</span>
+    </div>`).join('');
+}
+ 
+// ── HOTELS ──
+let hotelIds=[];
+function addHotelFromDB(item){
+  addHotel(item.name,String(item.stars||4),'','');
+}
+function addHotel(name='',stars='4',price='',supp=''){
+  const id=Date.now()+'_'+Math.random().toString(36).slice(2,5);
+  hotelIds.push(id);
   const row=document.createElement('div');
-  row.className='hotel-row'; row.id='hotel-'+id;
+  row.className='hotel-row'; row.id='hrow-'+id;
   row.innerHTML=`
-    <div><label>Hotel Name</label><input type="text" id="hn-${id}" value="${name}" placeholder="e.g. Jeju Maison Glad Hotel"></div>
-    <div><label>Stars</label><select id="hs-${id}"><option ${stars==='5'?'selected':''}>5</option><option ${stars==='4'?'selected':''}>4</option><option ${stars==='3'?'selected':''}>3</option></select></div>
-    <div><label>Price/pax</label><input type="text" id="hp-${id}" value="${price}" placeholder="990"></div>
-    <div><label>SGL Supp</label><input type="text" id="hx-${id}" value="${supp}" placeholder="+490"></div>
-    <button class="remove-btn" onclick="removeHotel('${id}')" title="Remove">×</button>`;
+    <div class="hotel-row-header">
+      <span class="hotel-row-title">${name||'Custom hotel'}</span>
+      <button class="remove-btn" onclick="removeHotel('${id}')">Remove</button>
+    </div>
+    <div class="hotel-row-grid">
+      <div><label>Hotel Name</label><input type="text" id="hn-${id}" value="${name}" placeholder="Hotel name"></div>
+      <div><label>Stars</label><select id="hs-${id}"><option ${stars==='5'?'selected':''}>5</option><option ${stars==='4'?'selected':''}>4</option><option ${stars==='3'?'selected':''}>3</option></select></div>
+      <div><label>Price / pax</label><input type="text" id="hp-${id}" value="${price}" placeholder="990"></div>
+      <div><label>SGL Supp</label><input type="text" id="hx-${id}" value="${supp}" placeholder="+490"></div>
+    </div>`;
   document.getElementById('hotel-rows').appendChild(row);
 }
- 
-function removeHotel(id) {
-  hotels=hotels.filter(h=>h!==id);
-  document.getElementById('hotel-'+id).remove();
-}
- 
-function getHotels() {
-  return hotels.map(id=>({
+function removeHotel(id){hotelIds=hotelIds.filter(h=>h!==id);document.getElementById('hrow-'+id).remove();}
+function getHotels(){
+  return hotelIds.map(id=>({
     name:document.getElementById('hn-'+id)?.value||'',
     stars:document.getElementById('hs-'+id)?.value||'4',
     price:document.getElementById('hp-'+id)?.value||'',
@@ -757,201 +708,205 @@ function getHotels() {
   })).filter(h=>h.name);
 }
  
-function collectData() {
+// ── COLLECT DATA ──
+function collectData(){
   const days=parseInt(document.getElementById('f-days').value)||5;
   const dayData={};
   for(let i=1;i<=days;i++){
-    dayData[i]={
-      title:document.getElementById(`d${i}-title`)?.value||`Day ${i}`,
-      stops:(document.getElementById(`d${i}-stops`)?.value||'').split('\n').map(s=>s.trim()).filter(Boolean)
-    };
+    const stops=(window._dayStops?.[i]||[]).map(s=>s.name);
+    dayData[i]={title:document.getElementById(`d${i}-title`)?.value||`Day ${i}`,stops};
   }
   return {
-    id:document.getElementById('f-id').value||'KS0001',
+    id:document.getElementById('lp-id').textContent||getNextKSNumber(),
     date:document.getElementById('f-date').value||'',
     clientName:document.getElementById('f-client').value||'',
     company:document.getElementById('f-company').value||'',
     email:document.getElementById('f-email').value||'',
     phone:document.getElementById('f-phone').value||'',
+    country:document.getElementById('f-country').value||'',
     destination:document.getElementById('f-dest').value||'',
     pax:document.getElementById('f-pax').value||'',
     nights:document.getElementById('f-nights').value||'4',
     days, currency:document.getElementById('f-currency').value||'SGD',
-    tags:getTags(), dayData,
-    hotels:getHotels(),
+    tags:getTags(), dayData, hotels:getHotels(),
     inclusions:document.getElementById('f-inc').value||'',
     exclusions:document.getElementById('f-exc').value||'',
     notes:document.getElementById('f-notes').value||'',
   };
 }
  
-function buildSummary() {
+async function autoSave(){
+  const d=collectData();
+  if(!d.clientName&&!d.destination) return;
+  const idx=itqDatabase.findIndex(i=>i.id===d.id);
+  d.status=d.status||'RFQ received'; d.savedAt=new Date().toISOString();
+  if(idx>=0) itqDatabase[idx]=d; else itqDatabase.push(d);
+  renderITQList(); await saveITQList();
+}
+ 
+function buildSummary(){
   const days=parseInt(document.getElementById('f-days').value)||5;
   let rows='';
   for(let i=1;i<=days;i++){
     const title=document.getElementById(`d${i}-title`)?.value||'—';
-    rows+=`<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem"><span style="color:var(--muted)">Day ${i}</span><span>${title||'—'}</span></div>`;
+    const stops=(window._dayStops?.[i]||[]).map(s=>s.name).slice(0,3).join(' · ');
+    rows+=`<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem"><span style="color:var(--muted);flex-shrink:0;margin-right:1rem">Day ${i}</span><span style="text-align:right;color:var(--ink)">${title}${stops?`<br><span style="color:var(--muted);font-size:0.72rem">${stops}</span>`:''}</span></div>`;
   }
-  const hotels=getHotels().map(h=>`${h.name} (${h.stars}★) — ${document.getElementById('f-currency').value} ${h.price}`).join('<br>')||'—';
+  const h=getHotels().map(h=>`${h.name} (${h.stars}★) — ${document.getElementById('f-currency').value} ${h.price}`).join('<br>')||'—';
   document.getElementById('gen-summary').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
-      <div><div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Client</div>
-        <div style="line-height:1.8"><strong>${document.getElementById('f-client').value||'—'}</strong><br>${document.getElementById('f-company').value||''}<br><span style="color:var(--muted);font-size:0.8rem">${document.getElementById('f-email').value||''}</span></div></div>
-      <div><div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Trip</div>
-        <div style="line-height:1.8"><strong>${document.getElementById('f-dest').value||'—'}</strong><br>${document.getElementById('f-nights').value||''}N ${document.getElementById('f-days').value||''}D<br><span style="color:var(--muted);font-size:0.8rem">${document.getElementById('f-pax').value||'—'}</span></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
+      <div><div style="font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.4rem">Client</div>
+        <div style="line-height:1.8"><strong>${document.getElementById('f-client').value||'—'}</strong><br>${document.getElementById('f-company').value||''}<br><span style="color:var(--muted);font-size:0.78rem">${document.getElementById('f-email').value||''}</span></div></div>
+      <div><div style="font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.4rem">Trip</div>
+        <div style="line-height:1.8"><strong>${document.getElementById('f-dest').value||'—'}</strong><br>${document.getElementById('f-nights').value||''}N ${document.getElementById('f-days').value||''}D · ${document.getElementById('f-pax').value||'—'}<br><span style="color:var(--muted);font-size:0.78rem">${document.getElementById('f-currency').value}</span></div></div>
     </div>
-    <div style="font-size:0.6rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem">Itinerary</div>
+    <div style="font-size:0.58rem;font-weight:500;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.4rem">Itinerary</div>
     ${rows}
-    <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">${hotels}</div>`;
+    <div style="margin-top:0.875rem;font-size:0.78rem;color:var(--muted)">${h}</div>`;
 }
  
 // ── AI EXTRACT ──
-async function aiExtract() {
-  const text=document.getElementById('ai-input').value.trim();
-  if(!text)return;
-  const btn=document.getElementById('ai-btn');
-  const btnText=document.getElementById('ai-btn-text');
-  btn.disabled=true;
-  btnText.innerHTML='<span class="spinner dark"></span> Extracting…';
-  try {
+async function aiExtract(){
+  const text=document.getElementById('ai-input').value.trim(); if(!text) return;
+  const btn=document.getElementById('ai-btn'),btnText=document.getElementById('ai-btn-text');
+  btn.disabled=true; btnText.innerHTML='<span class="spinner dark"></span> Extracting…';
+  try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       model:'claude-sonnet-4-20250514',max_tokens:1000,
-      system:`Extract travel ITQ details. Return ONLY valid JSON:
-{"clientName":"","company":"","email":"","phone":"","destination":"","pax":"","nights":"","days":"","currency":"SGD","tags":[],"dayTitles":{},"dayStops":{},"hotels":[{"name":"","stars":"4","price":"","supp":""}],"inclusions":"","exclusions":"","notes":""}
-dayTitles:{"1":"title",...} dayStops:{"1":"stop1\nstop2",...} Return ONLY JSON.`,
+      system:`Extract travel ITQ details from the user text. Return ONLY valid JSON:
+{"clientName":"","company":"","email":"","phone":"","country":"","destination":"","pax":"","nights":"","days":"","currency":"SGD","tags":[],"dayTitles":{"1":"","2":""},"dayStops":{"1":["stop1","stop2"],"2":["stop1"]},"hotels":[{"name":"","stars":"4","price":"","supp":""}],"inclusions":"","exclusions":"","notes":""}
+dayStops: array of stop names per day. Return ONLY JSON.`,
       messages:[{role:'user',content:text}]
     })});
     const data=await res.json();
     let d;try{d=JSON.parse(data.content[0].text);}catch(e){d={};}
-    if(d.clientName)document.getElementById('f-client').value=d.clientName;
-    if(d.company)document.getElementById('f-company').value=d.company;
-    if(d.email)document.getElementById('f-email').value=d.email;
-    if(d.phone)document.getElementById('f-phone').value=d.phone;
-    if(d.destination)document.getElementById('f-dest').value=d.destination;
-    if(d.pax)document.getElementById('f-pax').value=d.pax;
-    if(d.nights)document.getElementById('f-nights').value=d.nights;
+    if(d.clientName) document.getElementById('f-client').value=d.clientName;
+    if(d.company) document.getElementById('f-company').value=d.company;
+    if(d.email) document.getElementById('f-email').value=d.email;
+    if(d.phone) document.getElementById('f-phone').value=d.phone;
+    if(d.country) document.getElementById('f-country').value=d.country;
+    if(d.destination) document.getElementById('f-dest').value=d.destination;
+    if(d.pax) document.getElementById('f-pax').value=d.pax;
+    if(d.nights) document.getElementById('f-nights').value=d.nights;
     if(d.days){document.getElementById('f-days').value=d.days;buildDayTabs();}
-    if(d.currency)document.getElementById('f-currency').value=d.currency;
-    if(d.inclusions)document.getElementById('f-inc').value=d.inclusions;
-    if(d.exclusions)document.getElementById('f-exc').value=d.exclusions;
-    if(d.notes)document.getElementById('f-notes').value=d.notes;
-    if(d.tags)document.querySelectorAll('.tag-option').forEach(t=>{if(d.tags.includes(t.textContent))t.classList.add('selected');});
-    if(d.hotels?.length){hotels=[];document.getElementById('hotel-rows').innerHTML='';d.hotels.forEach(h=>addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));}
+    if(d.currency) document.getElementById('f-currency').value=d.currency;
+    if(d.inclusions) document.getElementById('f-inc').value=d.inclusions;
+    if(d.exclusions) document.getElementById('f-exc').value=d.exclusions;
+    if(d.notes) document.getElementById('f-notes').value=d.notes;
+    if(d.tags) document.querySelectorAll('.tag-option').forEach(t=>{if(d.tags.includes(t.textContent))t.classList.add('selected');});
+    if(d.hotels?.length){hotelIds=[];document.getElementById('hotel-rows').innerHTML='';d.hotels.forEach(h=>addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));}
     const dc=parseInt(d.days)||5;
+    window._dayStops=window._dayStops||{};
     for(let i=1;i<=dc;i++){
       const t=document.getElementById(`d${i}-title`);
-      const s=document.getElementById(`d${i}-stops`);
-      if(t&&d.dayTitles?.[i])t.value=d.dayTitles[i];
-      if(s&&d.dayStops?.[i])s.value=d.dayStops[i];
+      if(t&&d.dayTitles?.[i]) t.value=d.dayTitles[i];
+      if(d.dayStops?.[i]){
+        window._dayStops[i]=(d.dayStops[i]||[]).map(name=>{
+          const found=[...(db.venues||[]),...(db.restaurants||[])].find(v=>v.name.toLowerCase().includes(name.toLowerCase().slice(0,10)));
+          return found?{id:found.id,name:found.name,desc:found.description||'',type:'venue'}:{id:'custom_'+name,name,desc:'',type:'custom'};
+        });
+        renderStops(i);
+      }
     }
     syncPreview();
     btnText.innerHTML='✓ Done';
     setTimeout(()=>{btnText.textContent='Extract details';btn.disabled=false;},2000);
-  } catch(e){
-    btnText.textContent='Try again';btn.disabled=false;
-  }
+  }catch(e){btnText.textContent='Try again';btn.disabled=false;}
+}
+ 
+// ── LOAD EXISTING ITQ ──
+function loadITQ(id){
+  const itq=itqDatabase.find(i=>i.id===id); if(!itq) return;
+  document.getElementById('lp-id').textContent=itq.id||'';
+  document.getElementById('f-date').value=itq.date||'';
+  document.getElementById('f-client').value=itq.clientName||'';
+  document.getElementById('f-company').value=itq.company||'';
+  document.getElementById('f-email').value=itq.email||'';
+  document.getElementById('f-phone').value=itq.phone||'';
+  document.getElementById('f-country').value=itq.country||'';
+  document.getElementById('f-dest').value=itq.destination||'';
+  document.getElementById('f-pax').value=itq.pax||'';
+  document.getElementById('f-nights').value=itq.nights||4;
+  document.getElementById('f-days').value=itq.days||5;
+  document.getElementById('f-currency').value=itq.currency||'SGD';
+  document.getElementById('f-inc').value=itq.inclusions||'';
+  document.getElementById('f-exc').value=itq.exclusions||'';
+  document.getElementById('f-notes').value=itq.notes||'';
+  document.querySelectorAll('.tag-option').forEach(t=>t.classList.toggle('selected',(itq.tags||[]).includes(t.textContent)));
+  window._dayStops={};
+  buildDayTabs();
+  const dd=itq.dayData||{};
+  Object.keys(dd).forEach(k=>{
+    const t=document.getElementById(`d${k}-title`); if(t) t.value=dd[k].title||'';
+    window._dayStops[k]=(dd[k].stops||[]).map(name=>({id:'loaded_'+name,name,desc:'',type:'loaded'}));
+    renderStops(parseInt(k));
+  });
+  hotelIds=[];document.getElementById('hotel-rows').innerHTML='';
+  (itq.hotels||[]).forEach(h=>addHotel(h.name||'',h.stars||'4',h.price||'',h.supp||''));
+  syncPreview(); goStep(0);
 }
  
 // ── GENERATE ──
-let lastGeneratedData=null;
- 
-async function generateITQ() {
+let lastData=null;
+async function generateITQ(){
   const btn=document.getElementById('gen-btn');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span> Building…';
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Building…';
   const data=collectData();
-  data.status='ITQ sent';
-  data.generatedAt=new Date().toISOString();
-  lastGeneratedData=data;
- 
-  // Save to OneDrive
-  const existing=itqDatabase.findIndex(i=>i.id===data.id);
-  if(existing>=0)itqDatabase[existing]=data;
-  else itqDatabase.push(data);
-  renderITQList();
-  await saveITQList();
- 
-  // Save individual ITQ file to OneDrive
-  try {
-    const html=buildITQHTML(data);
-    const filename=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
-    await graphUpload(`/me/drive/root:/${FOLDER}/${filename}:/content`, html);
-    setSyncStatus('ok','ITQ saved to OneDrive');
-  } catch(e) {
-    setSyncStatus('error','Could not save to OneDrive — downloading locally');
-  }
- 
-  // Always download locally too
+  data.id=document.getElementById('lp-id').textContent||getNextKSNumber();
+  data.status='ITQ sent'; data.generatedAt=new Date().toISOString();
+  lastData=data;
+  const idx=itqDatabase.findIndex(i=>i.id===data.id);
+  if(idx>=0) itqDatabase[idx]=data; else itqDatabase.push(data);
+  renderITQList(); await saveITQList();
   const html=buildITQHTML(data);
-  const filename=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
-  downloadHTML(html, filename);
- 
-  btn.innerHTML='Generate &amp; Save ITQ';
-  btn.disabled=false;
- 
+  const fname=`${data.id}-${(data.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`;
+  try{await graphUpload(`/me/drive/root:/${FOLDER}/${fname}:/content`,html);setSyncStatus('ok','ITQ saved to OneDrive');}
+  catch(e){setSyncStatus('error','OneDrive save failed — downloading locally');}
+  downloadHTML(html,fname);
+  btn.innerHTML='Generate &amp; Save ITQ'; btn.disabled=false;
   document.getElementById('success-area').innerHTML=`
     <div class="success-box">
       <div class="success-icon">✦</div>
       <div class="success-title">${data.id} is ready</div>
-      <div class="success-sub">Saved to OneDrive · <strong>KNSTour-ITQ/${filename}</strong><br>Also downloaded to your device. Ready to send.</div>
+      <div class="success-sub">Saved to OneDrive · KNSTour-ITQ/${fname}<br>Also downloaded to your device. Ready to send.</div>
       <button class="btn-dl" onclick="reDownload()">Download again</button>
       <button class="btn-new" onclick="newITQ()">New ITQ</button>
     </div>`;
 }
- 
-function reDownload() {
-  if(!lastGeneratedData)return;
-  const html=buildITQHTML(lastGeneratedData);
-  downloadHTML(html,`${lastGeneratedData.id}-${(lastGeneratedData.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`);
-}
- 
-async function newITQ() {
+function reDownload(){if(!lastData)return;const html=buildITQHTML(lastData);downloadHTML(html,`${lastData.id}-${(lastData.destination||'ITQ').replace(/[^a-zA-Z0-9]/g,'-')}.html`);}
+async function newITQ(){
   document.getElementById('success-area').innerHTML='';
-  document.querySelectorAll('input[type=text],input[type=email],input[type=number],textarea').forEach(el=>el.value='');
+  document.querySelectorAll('input[type=text],input[type=email],input[type=number],textarea').forEach(el=>{if(el.id!=='ai-input')el.value='';});
+  document.getElementById('f-nights').value=4; document.getElementById('f-days').value=5;
   document.querySelectorAll('.tag-option').forEach(t=>t.classList.remove('selected'));
-  document.getElementById('f-nights').value=4;
-  document.getElementById('f-days').value=5;
-  hotels=[];document.getElementById('hotel-rows').innerHTML='';
-  buildDayTabs();
-  addHotel('','5','','');addHotel('','4','','');
-  await autoNextId();
-  syncPreview();
-  goStep(0);
-  currentEditId=null;
+  hotelIds=[];document.getElementById('hotel-rows').innerHTML='';
+  window._dayStops={};
+  buildDayTabs(); addHotel();
+  setNextKSNumber(); syncPreview(); goStep(0);
 }
- 
-function downloadHTML(html,filename){
-  const blob=new Blob([html],{type:'text/html'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download=filename;a.click();
-  URL.revokeObjectURL(a.href);
-}
- 
+function downloadHTML(html,fname){const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();URL.revokeObjectURL(a.href);}
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
  
 // ── BUILD ITQ HTML ──
-function buildITQHTML(d) {
+function buildITQHTML(d){
   const secIds=['overview',...Array.from({length:d.days},(_,i)=>'day'+(i+1)),'pricing'];
-  const navBtns=['Overview',...Array.from({length:d.days},(_,i)=>`Day ${i+1}`),'Pricing']
-    .map((label,i)=>`<button class="nav-btn${i===0?' active':''}" onclick="show('${secIds[i]}')">${label}</button>`).join('');
-  const overviewRows=Object.entries(d.dayData).map(([num,day])=>
-    `<div class="day-row" onclick="show('day${num}')"><div class="day-num"><span>Day</span><span>${num}</span></div><div class="day-content"><div class="day-title">${esc(day.title)}</div><div class="day-stops">${day.stops.slice(0,4).map(esc).join(' · ')}</div></div><div class="day-arrow">&#8594;</div></div>`).join('');
+  const navBtns=['Overview',...Array.from({length:d.days},(_,i)=>`Day ${i+1}`),'Pricing'].map((label,i)=>`<button class="nav-btn${i===0?' active':''}" onclick="show('${secIds[i]}')">${label}</button>`).join('');
+  const overviewRows=Object.entries(d.dayData).map(([num,day])=>`<div class="day-row" onclick="show('day${num}')"><div class="day-num"><span>Day</span><span>${num}</span></div><div class="day-content"><div class="day-title">${esc(day.title)}</div><div class="day-stops">${day.stops.slice(0,4).map(esc).join(' · ')}</div></div><div class="day-arrow">&#8594;</div></div>`).join('');
   const daySections=Object.entries(d.dayData).map(([num,day])=>{
-    const stops=day.stops.map((s,si)=>`<div class="stop" style="animation-delay:${si*0.05+0.05}s"><div class="stop-icon"><div class="stop-dot"></div><div class="stop-line"></div></div><div><div class="stop-name">${esc(s)}</div><div class="stop-img"><span>Venue photo</span></div></div></div>`).join('');
+    const stops=day.stops.map((s,si)=>{
+      const dbItem=[...(db.venues||[]),...(db.restaurants||[])].find(v=>v.name===s);
+      const desc=dbItem?.description||'';
+      return `<div class="stop" style="animation-delay:${si*0.05+0.05}s"><div class="stop-icon"><div class="stop-dot"></div><div class="stop-line"></div></div><div><div class="stop-name">${esc(s)}</div>${desc?`<div class="stop-desc">${esc(desc)}</div>`:''}<div class="stop-img"><span>Venue photo</span></div></div></div>`;
+    }).join('');
     return `<div class="section" id="sec-day${num}"><div class="day-section"><div class="day-header"><div class="day-big-num">${String(num).padStart(2,'0')}</div><div><div class="day-header-label">Day ${num}</div><div class="day-header-title">${esc(day.title)}</div></div></div><div class="stop-list">${stops}</div></div></div>`;
   }).join('');
   const hotelCards=d.hotels.map((h,i)=>`<div class="hotel-card ${i===0?'featured':''}"><div><div class="hotel-stars">${'★'.repeat(parseInt(h.stars||4))}</div><div class="hotel-name">${esc(h.name)}${i===0?` <span class="hotel-tag">${h.stars}★</span>`:''}</div></div><div class="hotel-price"><div class="price-amount">${esc(d.currency)} ${esc(h.price)}</div><div class="price-unit">per pax · twin share</div>${h.supp?`<div class="price-supp">Single supplement +${esc(d.currency)} ${esc(h.supp)}</div>`:''}</div></div>`).join('');
  
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(d.id)} — ${esc(d.destination)} | KNS Tour</title>
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(d.id)} — ${esc(d.destination)} | KNS Tour</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap');
 :root{--cream:#FAF8F3;--ink:#1A1814;--gold:#B8955A;--gold-light:#D4B483;--muted:#7A7570;--border:#E2DDD6;--white:#FFFFFF;--green-dark:#1A2B1B;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;line-height:1.6;}
+*{margin:0;padding:0;box-sizing:border-box;}body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;line-height:1.6;}
 .cover{min-height:100vh;display:flex;flex-direction:column;background:var(--green-dark);position:relative;overflow:hidden;}
 .cover-overlay{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23B8955A' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
 .cover-content{position:relative;z-index:2;display:flex;flex-direction:column;min-height:100vh;padding:3rem;}
@@ -964,16 +919,16 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
 .cover-title em{font-style:italic;color:#D4B483;}
 .cover-subtitle{font-size:0.85rem;color:rgba(255,255,255,0.45);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3rem;}
 .cover-divider{width:3rem;height:1px;background:#B8955A;margin-bottom:2rem;}
-.cover-meta{display:flex;gap:0;flex-wrap:wrap;}
+.cover-meta{display:flex;flex-wrap:wrap;}
 .cover-meta-item{padding-right:2.5rem;border-right:1px solid rgba(184,149,90,0.3);padding-left:2.5rem;margin-bottom:1rem;}
 .cover-meta-item:first-child{padding-left:0;}
 .meta-label{font-size:0.6rem;font-weight:500;color:#B8955A;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.3rem;}
 .meta-value{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;}
 .cover-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);flex-wrap:wrap;gap:1rem;}
 .prepared-for{font-size:0.65rem;font-weight:500;color:rgba(255,255,255,0.4);letter-spacing:0.25em;text-transform:uppercase;}
-.prepared-for strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:#fff;letter-spacing:0.05em;text-transform:none;margin-top:0.25rem;}
+.prepared-for strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:#fff;text-transform:none;margin-top:0.25rem;}
 .agent-info{text-align:right;font-size:0.7rem;line-height:1.8;color:rgba(255,255,255,0.4);}
-.agent-info strong{display:block;font-size:0.75rem;font-weight:500;color:#D4B483;letter-spacing:0.1em;}
+.agent-info strong{display:block;font-size:0.75rem;font-weight:500;color:#D4B483;}
 .nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E2DDD6;display:flex;overflow-x:auto;}
 .nav-btn{flex-shrink:0;padding:1rem 1.5rem;font-family:'Jost',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:#7A7570;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .nav-btn:hover{color:#1A1814;}.nav-btn.active{color:#B8955A;border-bottom-color:#B8955A;}
@@ -991,7 +946,7 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
 .highlight-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:#D4B483;opacity:0.5;line-height:1;margin-bottom:0.5rem;}
 .highlight-label{font-size:0.65rem;font-weight:500;color:#7A7570;letter-spacing:0.2em;text-transform:uppercase;}
 .highlight-value{font-size:0.9rem;color:#1A1814;margin-top:0.2rem;}
-.itinerary-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#E2DDD6;border:1px solid #E2DDD6;}
+.itinerary-grid{display:grid;gap:1px;background:#E2DDD6;border:1px solid #E2DDD6;}
 .day-row{display:grid;grid-template-columns:80px 1fr auto;background:#fff;cursor:pointer;transition:background 0.15s;}
 .day-row:hover{background:#F2EDE4;}
 .day-num{padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #E2DDD6;background:#F2EDE4;}
@@ -1011,7 +966,8 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
 .stop-dot{width:8px;height:8px;border-radius:50%;background:#B8955A;flex-shrink:0;}
 .stop-line{width:1px;background:#E2DDD6;flex:1;margin-top:6px;}
 .stop:last-child .stop-line{display:none;}
-.stop-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.75rem;}
+.stop-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.4rem;}
+.stop-desc{font-size:0.8rem;color:#7A7570;max-width:560px;line-height:1.7;margin-bottom:0.75rem;}
 .stop-img{height:180px;background:#F2EDE4;border:1px dashed #E2DDD6;display:flex;align-items:center;justify-content:center;max-width:400px;}
 .stop-img span{font-size:0.65rem;color:#7A7570;letter-spacing:0.2em;text-transform:uppercase;}
 .hotel-cards{display:flex;flex-direction:column;border:1px solid #E2DDD6;margin:2rem 0;}
@@ -1034,9 +990,7 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
 .cond-label:last-of-type,.cond-value:last-of-type{border-bottom:none;}.excl{color:#8B3A2A;}
 @media print{.nav{display:none;}.section{display:block!important;}.cover{min-height:auto;page-break-after:always;}.day-section,.overview,.pricing-section{page-break-before:always;}.stop-img{display:none;}}
 @media(max-width:600px){.cover-content{padding:2rem 1.5rem;}.highlights{grid-template-columns:1fr;}.info-grid{grid-template-columns:1fr;}.day-big-num{font-size:5rem;}}
-</style>
-</head>
-<body>
+</style></head><body>
 <div class="cover"><div class="cover-overlay"></div>
   <div class="cover-content">
     <div class="logo-bar"><div class="logo">KNS Tour</div><div class="itq-ref">Quote No. ${esc(d.id)}<br>${esc(d.date)}</div></div>
@@ -1072,7 +1026,7 @@ body{background:var(--cream);color:var(--ink);font-family:'Jost',sans-serif;font
     </div>
     <div class="highlights">
       <div class="highlight-card"><div class="highlight-num">${d.days}</div><div class="highlight-label">Days</div><div class="highlight-value">${d.nights} nights included</div></div>
-      <div class="highlight-card"><div class="highlight-num">${Object.values(d.dayData).reduce((a,day)=>a+day.stops.length,0)}</div><div class="highlight-label">Attractions</div><div class="highlight-value">Curated experiences</div></div>
+      <div class="highlight-card"><div class="highlight-num">${Object.values(d.dayData).reduce((a,day)=>a+day.stops.length,0)}</div><div class="highlight-label">Attractions</div><div class="highlight-value">Curated stops</div></div>
       <div class="highlight-card"><div class="highlight-num">${d.hotels.length}</div><div class="highlight-label">Hotel Options</div><div class="highlight-value">${d.hotels.map(h=>h.stars+'★').join(' / ')||'—'}</div></div>
     </div>
     <div class="itinerary-grid">${overviewRows}</div>
@@ -1093,19 +1047,13 @@ ${daySections}
 </div>
 <script>
 const S=${JSON.stringify(secIds)};
-function show(id){
-  S.forEach(s=>document.getElementById('sec-'+s).classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById('sec-'+id);if(el)el.classList.add('active');
-  const idx=S.indexOf(id);const btns=document.querySelectorAll('.nav-btn');
-  if(btns[idx])btns[idx].classList.add('active');
-  window.scrollTo({top:document.getElementById('main-nav').offsetTop,behavior:'smooth'});
-}
-<\/script>
-</body></html>`;
+function show(id){S.forEach(s=>document.getElementById('sec-'+s).classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const el=document.getElementById('sec-'+id);if(el)el.classList.add('active');const idx=S.indexOf(id);const btns=document.querySelectorAll('.nav-btn');if(btns[idx])btns[idx].classList.add('active');window.scrollTo({top:document.getElementById('main-nav').offsetTop,behavior:'smooth'});}
+<\/script></body></html>`;
 }
  
-// ── BOOT ──
+// ── BUILT-IN DATABASE (fallback) ──
+const BUILTIN_DB = {"venues": [{"id": "v001", "name": "Gyeongbokgung Palace", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "The most comprehensive and grandest palace built in 1394 as the main Joseon Dynasty palace by its founder King Taejo. Includes Guard Changing Ceremony and National Museum of Korea.", "tags": ["historical", "cultural", "palace"]}, {"id": "v002", "name": "Bukchon Hanok Village", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "A charming neighborhood in Seoul filled with traditional Korean houses (hanoks). Narrow alleyways, beautiful architecture, and a glimpse of Korea's rich cultural heritage.", "tags": ["cultural", "historical", "photography"]}, {"id": "v003", "name": "Nami Island", "location": "Gangwon", "region": "Gangwon", "type": "attraction", "description": "Nami Island, with a concept of 'Fairy Tale Village and Song Village,' provides various cultural events, concerts, exhibitions and artists a space for creativity in a natural huge Garden. Ferry ride to the island included.", "tags": ["nature", "scenic", "family"]}, {"id": "v004", "name": "Alpaca World", "location": "Gangwon", "region": "Gangwon", "type": "attraction", "description": "Gangwon-do's first experiential zoo, spans 363,636\u33a1 of forest. Visitors can interact with and feed alpacas in a beautiful natural setting. Home to Korea's first-born alpaca.", "tags": ["family", "animals", "experience"]}, {"id": "v005", "name": "Alpensia Ski Resort", "location": "Gangwon", "region": "Gangwon", "type": "attraction", "description": "Transfer to Ski Resort, proceed for ski suit and equipment rental shop. Ski suit and equipment are all included, goggle and gloves are optional. Check in Resort.", "tags": ["ski", "winter", "adventure"]}, {"id": "v006", "name": "Yongpyeong Balwangsan Mountain Tour Cable Car", "location": "Gangwon", "region": "Gangwon", "type": "attraction", "description": "The longest round trip cable car in Korea, with 100 eight-seater cabins. Departs from Dragon Plaza and runs for 18 minutes. Arrive at Dragon Castle stop at 1,458m above sea level.", "tags": ["scenic", "nature", "cable car"]}, {"id": "v007", "name": "DMZ Tour", "location": "Paju", "region": "Gyeonggi", "type": "attraction", "description": "The Demilitarized Zone (DMZ) is a weapons-free buffer zone between North and South Korea. Established July 27, 1953. Includes Imjingak, 3rd Tunnel, and observatory visits.", "tags": ["historical", "educational", "unique"]}, {"id": "v008", "name": "Imjingak Peace Gondola", "location": "Paju", "region": "Gyeonggi", "type": "attraction", "description": "The world's first gondola that passes over a civilian restricted zone (the DMZ), connecting Imjingak in the south to a station across the Imjin River. Offers views of historical military sites.", "tags": ["historical", "unique", "DMZ"]}, {"id": "v009", "name": "Seongsan Ilchulbong Peak", "location": "Jeju", "region": "Jeju", "type": "attraction", "description": "A UNESCO World Heritage Site \u2014 a dramatic tuff cone rising 182m from the sea. One of Jeju's most breathtaking panoramas, especially at sunrise.", "tags": ["UNESCO", "scenic", "nature", "Jeju"]}, {"id": "v010", "name": "Haenyeo Divers Show", "location": "Seongsan, Jeju", "region": "Jeju", "type": "attraction", "description": "The Haenyeo Show at Seongsan Ilchulbong showcases Jeju's traditional female divers as they perform and share their culture. A unique look into Jeju's maritime heritage.", "tags": ["cultural", "Jeju", "performance"]}, {"id": "v011", "name": "Aqua Planet Jeju", "location": "Seongsan, Jeju", "region": "Jeju", "type": "attraction", "description": "Korea's largest aquarium with a 5.3-million-litre main tank and over 48,000 marine creatures. Daily shows, touch pools, and haenyeo diver performances.", "tags": ["family", "Jeju", "aquarium"]}, {"id": "v012", "name": "Dodu Rainbow Coastal Road", "location": "Jeju City", "region": "Jeju", "type": "attraction", "description": "A colorful seaside walkway located on the coast of Jeju. Known for its rainbow-colored lights and ocean views, popular photo spot especially at sunset and night.", "tags": ["scenic", "photography", "Jeju"]}, {"id": "v013", "name": "Iho-Taewoo Beach", "location": "Jeju City", "region": "Jeju", "type": "attraction", "description": "Known for its unique black and white sand and beautiful sunsets. The iconic red and white horse-shaped lighthouses make it a favourite for families and couples.", "tags": ["beach", "Jeju", "scenic"]}, {"id": "v014", "name": "Dongmun Market", "location": "Jeju City", "region": "Jeju", "type": "attraction", "description": "Jeju's largest and oldest traditional market, established after the colonial period. A foodie haven offering traditional dishes and South Korean street food.", "tags": ["market", "food", "Jeju", "cultural"]}, {"id": "v015", "name": "O'sulloc Tea Museum", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "Where Korean tea tradition meets modern design. Opened beside the Seogwang Tea Plantation with a gallery, eco rest area, and caf\u00e9 with tea-inspired desserts.", "tags": ["cultural", "Jeju", "tea"]}, {"id": "v016", "name": "Camellia Hill", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "A botanical garden famed for its vast camellia collection and seasonal blooms. Scenic paths and picture-perfect photo spots throughout the year.", "tags": ["garden", "Jeju", "nature"]}, {"id": "v017", "name": "Eco Land Theme Park", "location": "Jeju", "region": "Jeju", "type": "attraction", "description": "A nature-themed park in Jeju where visitors ride a small train through forests, lakes, and flower fields. Relaxing and family-friendly.", "tags": ["family", "Jeju", "nature"]}, {"id": "v018", "name": "Seongeup Folk Village", "location": "Jeju", "region": "Jeju", "type": "attraction", "description": "A 600-year-old living settlement designated Important Folklore Material No. 188. Home to actual residents preserving Jeju's traditional architecture and way of life.", "tags": ["cultural", "historical", "Jeju"]}, {"id": "v019", "name": "Jeju Tangerine Picking", "location": "Jeju", "region": "Jeju", "type": "experience", "description": "Pick fresh tangerines in Jeju's orchards. Enjoy sweet tastings and learn local farming culture. A seasonal, family-friendly outdoor experience.", "tags": ["experience", "family", "Jeju", "seasonal"]}, {"id": "v020", "name": "Jeju Nanta Show", "location": "Jeju", "region": "Jeju", "type": "performance", "description": "A 90-minute non-verbal comedy musical mixing drumming, acrobatics, and kitchen chaos. Entirely language-free and fun for all nationalities and ages.", "tags": ["entertainment", "performance", "Jeju"]}, {"id": "v021", "name": "Lunafall", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "A massive outdoor night digital theme park \u2014 2.2km forest trail with LED displays, holograms, and interactive art blending nature and technology.", "tags": ["night", "Jeju", "digital art"]}, {"id": "v022", "name": "Water World Jeju", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "Korea's largest indoor media art park \u2014 12 themed zones blending water features with immersive light, sound, and interactive art. Heated year-round.", "tags": ["family", "Jeju", "indoor", "art"]}, {"id": "v023", "name": "Jeongbang Waterfall", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "One of Jeju's top three waterfalls and the only waterfall in Asia to fall directly into the ocean.", "tags": ["nature", "Jeju", "waterfall"]}, {"id": "v024", "name": "Jusangjeolli Cliff", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "attraction", "description": "Designated Jeju Natural Monument No. 443 \u2014 stunning hexagonal basalt columns rising 30\u201340m along a 1km coastal stretch.", "tags": ["nature", "Jeju", "scenic"]}, {"id": "v025", "name": "Garden of Morning Calm", "location": "Gapyeong, Gyeonggi", "region": "Gyeonggi", "type": "attraction", "description": "Autumn at The Garden of Morning Calm is a vibrant display of yellow and red foliage. In winter the annual light festival transforms it into a magical illuminated wonderland.", "tags": ["garden", "seasonal", "scenic"]}, {"id": "v026", "name": "The Painters Performance", "location": "Seoul", "region": "Seoul", "type": "performance", "description": "A new concept art performance combining live drawings with 3D visual effects, exciting dance, and cheerful comedy. Highly praised for its entertainment value and humor.", "tags": ["entertainment", "performance", "Seoul"]}, {"id": "v027", "name": "Everland", "location": "Yongin, Gyeonggi", "region": "Gyeonggi", "type": "attraction", "description": "Korea's largest theme park featuring rides, seasonal festivals, and a zoo. A full-day family destination near Seoul.", "tags": ["family", "theme park", "fun"]}, {"id": "v028", "name": "Starfield Library COEX", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "The most beautiful library in Korea, located inside COEX Mall. A towering bookshelf structure that's a favourite photography and cultural spot.", "tags": ["cultural", "photography", "Seoul", "indoor"]}, {"id": "v029", "name": "Gwangjang Market", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "Seoul's oldest traditional market, famous for its street food stalls including bindaetteok, mayak kimbap, and raw beef. A must for food lovers.", "tags": ["market", "food", "Seoul", "cultural"]}, {"id": "v030", "name": "Hanbok Experience", "location": "Seoul", "region": "Seoul", "type": "experience", "description": "Traditional Korean costume Hanbok wearing experience \u2014 a must before visiting the Royal Palace. Widely available near Gyeongbokgung.", "tags": ["cultural", "experience", "Seoul"]}, {"id": "v031", "name": "Gamcheon Culture Village", "location": "Busan", "region": "Busan", "type": "attraction", "description": "Known as the 'Machu Picchu of Busan,' where colorful houses cascade down a coastal hillside. Vibrant alleys adorned with murals and sculptures.", "tags": ["cultural", "art", "Busan", "photography"]}, {"id": "v032", "name": "Songdo Cable Car", "location": "Busan", "region": "Busan", "type": "attraction", "description": "Busan Air Cruise revitalizes Songdo Beach, Korea's first public beach. 39 cabins including crystal cabins with transparent floors offering stunning coastal views.", "tags": ["scenic", "Busan", "views"]}, {"id": "v033", "name": "Haedong Yonggungsa Temple", "location": "Busan", "region": "Busan", "type": "attraction", "description": "A stunning temple built on the ocean cliffs of Busan, one of the few seaside temples in Korea. Dramatic views and peaceful atmosphere.", "tags": ["cultural", "historical", "Busan", "scenic"]}, {"id": "v034", "name": "Haeundae Blueline Park Sky Capsule", "location": "Busan", "region": "Busan", "type": "attraction", "description": "A scenic capsule train ride along the coastline of Haeundae. Colorful capsule cars offer panoramic ocean views.", "tags": ["scenic", "Busan", "unique"]}, {"id": "v035", "name": "Byeo Kkot Nongbu (Gochujang Making)", "location": "Gimpo, Gyeonggi", "region": "Gyeonggi", "type": "experience", "description": "Visit a farm to make authentic Korean Gochujang using traditional ingredients. Learn the process, explore Korean food culture, and take home your own chili paste. Bibimbap lunch included.", "tags": ["experience", "food", "cultural", "hands-on"]}, {"id": "v036", "name": "Gangchon Railbike", "location": "Gangwon", "region": "Gangwon", "type": "experience", "description": "Ride through scenic riverside tracks on a pedal-powered railbike. Tunnels, bridges, and beautiful nature views. Popular for groups and families.", "tags": ["experience", "adventure", "nature"]}, {"id": "v037", "name": "Seaside Railbike Yeongjongdo", "location": "Incheon", "region": "Incheon", "type": "experience", "description": "Ride the Yeongjongdo Seaside Railbike for stunning coastal views and a refreshing sea breeze. Pedal through tunnels, cross bridges, and spot wildlife.", "tags": ["experience", "adventure", "scenic"]}, {"id": "v038", "name": "Aegibong Peace Eco Park", "location": "Gimpo, Gyeonggi", "region": "Gyeonggi", "type": "attraction", "description": "Visit where nature and history come together near the DMZ. Enjoy panoramic views, peaceful trails, and exhibits on biodiversity and peace.", "tags": ["nature", "historical", "DMZ"]}, {"id": "v039", "name": "Luge Riding Ganghwado", "location": "Incheon", "region": "Incheon", "type": "experience", "description": "Experience the thrill of Ganghwado's luge ride, a gravity-powered adventure down winding tracks. No motors needed \u2014 slopes and curves add excitement for all ages.", "tags": ["adventure", "family", "experience"]}, {"id": "v040", "name": "Dasan King Jjimjilbang", "location": "Yangpyeong, Gyeonggi", "region": "Gyeonggi", "type": "experience", "description": "24-hour Korean bathhouse featuring hot tubs, showers, and traditional saunas. Exchange key for a locker key which also serves as a charge card inside.", "tags": ["wellness", "cultural", "experience"]}, {"id": "v041", "name": "Bulguksa Temple & Seokguram Grotto", "location": "Gyeongju", "region": "Gyeongju", "type": "attraction", "description": "UNESCO World Heritage Site. One of Korea's most celebrated Buddhist temples dating back to the 8th century. Adjacent Seokguram Grotto houses a magnificent stone Buddha.", "tags": ["UNESCO", "historical", "cultural", "Gyeongju"]}, {"id": "v042", "name": "Gwangmyeong Cave", "location": "Gwangmyeong, Gyeonggi", "region": "Gyeonggi", "type": "attraction", "description": "A former gold mine transformed into an immersive cave experience with art installations, wine tasting, and unique underground exhibitions.", "tags": ["unique", "indoor", "art"]}, {"id": "v043", "name": "Joyangbangjik Cafe", "location": "Ganghwa Island, Incheon", "region": "Incheon", "type": "attraction", "description": "A former 1947 cotton factory turned trendy caf\u00e9. Blending history with modern comfort, it offers tea, coffee, and desserts in a nostalgic industrial setting.", "tags": ["cafe", "cultural", "unique"]}, {"id": "v044", "name": "Haneul Park", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "In autumn, covered with golden silver grass waving in the cool breeze. From the hill, enjoy a wide beautiful view of Seoul under a clear sky.", "tags": ["nature", "scenic", "seasonal", "Seoul"]}, {"id": "v045", "name": "Namsan Park & Seoul Tower", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "The current symbol of Seoul. Namsan Park, Seoul Tower Observatory, and Love Lock Wall. Accessible by cable car with panoramic city views.", "tags": ["iconic", "scenic", "Seoul", "photography"]}, {"id": "v046", "name": "Seopjikoji", "location": "Seongsan, Jeju", "region": "Jeju", "type": "attraction", "description": "Dramatic coastal headland famous for its volcanic cliffs, wide grass fields, and ocean views. Especially popular in spring with yellow canola flowers. Scenic walking paths and lighthouse.", "tags": ["scenic", "Jeju", "nature", "photography"]}, {"id": "v047", "name": "Yongyeon Suspension Bridge", "location": "Jeju City", "region": "Jeju", "type": "attraction", "description": "Scenic suspension bridge spanning Yongyeon Valley near downtown Jeju City. Beautiful views of cliffs and water, especially impressive at night when illuminated.", "tags": ["scenic", "Jeju", "photography"]}, {"id": "v048", "name": "Strawberry Picking", "location": "Gyeonggi", "region": "Gyeonggi", "type": "experience", "description": "Seasonal strawberry picking experience at local farms. Pick fresh strawberries and enjoy tastings. Popular in late winter and spring.", "tags": ["experience", "seasonal", "family"]}, {"id": "v049", "name": "Nurimaru APEC House", "location": "Busan", "region": "Busan", "type": "attraction", "description": "Former APEC Summit venue set on a beautiful coastal island in Haeundae. Offers scenic ocean views and an insight into international diplomacy.", "tags": ["historical", "scenic", "Busan"]}, {"id": "v050", "name": "War Memorial Museum", "location": "Seoul", "region": "Seoul", "type": "attraction", "description": "Showcases Korea's military history from ancient times to the Korean War with immersive exhibits and interactive experiences. Outdoor military weapons exhibitions.", "tags": ["historical", "educational", "Seoul"]}], "restaurants": [{"id": "r001", "name": "Imo-ne Jogae-gui", "location": "Incheon Airport area", "region": "Incheon", "type": "breakfast", "cuisine": "Korean Seafood", "description": "Warm and nice seafood noodle soup breakfast near Incheon Airport. First stop for arriving groups. ARRIVED IN INCHEON AIRPORT \u2014 meet and greet with tour guide.", "tags": ["breakfast", "seafood", "arrival", "Incheon"]}, {"id": "r002", "name": "Goryeo Samgyetang", "location": "Seoul", "region": "Seoul", "type": "lunch", "cuisine": "Korean Traditional", "description": "Classic ginseng chicken soup restaurant. One of Korea's most celebrated national dishes \u2014 whole chicken stuffed with ginseng, glutinous rice, jujube, and garlic.", "tags": ["lunch", "traditional", "healthy", "Seoul"]}, {"id": "r003", "name": "KkoKko Dakgalbi", "location": "Nami Island area", "region": "Gangwon", "type": "lunch", "cuisine": "Korean", "description": "Spicy stir-fried chicken (dakgalbi) restaurant near Nami Island. Popular choice for groups visiting the area.", "tags": ["lunch", "chicken", "Gangwon"]}, {"id": "r004", "name": "Byeo Kkot Nongbu", "location": "Gimpo, Gyeonggi", "region": "Gyeonggi", "type": "lunch", "cuisine": "Korean Farm", "description": "Farm-to-table restaurant at the Gochujang making farm. Bibimbap lunch included after the farm experience. Traditional Korean ingredients sourced locally.", "tags": ["lunch", "farm", "experience", "Gyeonggi"]}, {"id": "r005", "name": "Sandeulhae", "location": "Seoul/Gyeonggi area", "region": "Seoul", "type": "dinner", "cuisine": "Korean", "description": "Korean dinner venue popular with groups. Offers variety of Korean set menus suitable for inbound tour groups.", "tags": ["dinner", "Korean", "group"]}, {"id": "r006", "name": "Maechirang (Gamjatang)", "location": "Gyeonggi", "region": "Gyeonggi", "type": "dinner", "cuisine": "Korean", "description": "Specializing in Gamjatang \u2014 hearty pork bone stew with potatoes. Warming Korean comfort food ideal for evening group dining.", "tags": ["dinner", "Korean", "stew"]}, {"id": "r007", "name": "Myeongnyun Jinsa Galbi", "location": "Seoul", "region": "Seoul", "type": "dinner", "cuisine": "Korean BBQ", "description": "Korean galbi (short ribs) restaurant in Seoul. Popular for group dinners with premium quality grilled meat.", "tags": ["dinner", "BBQ", "galbi", "Seoul"]}, {"id": "r008", "name": "Neulbom Black Pork Restaurant", "location": "Jeju", "region": "Jeju", "type": "dinner", "cuisine": "Jeju Specialty", "description": "Jeju's legendary Heuk-Dwaeji (black pork) \u2014 grilled at the table, rich and deeply flavourful. One of Jeju's most iconic dining experiences.", "tags": ["dinner", "black pork", "Jeju", "specialty"]}, {"id": "r009", "name": "Hanjeongsik", "location": "Seoul", "region": "Seoul", "type": "dinner", "cuisine": "Korean Traditional", "description": "Traditional Korean full-course meal (Hanjeongsik) with an array of seasonal side dishes. Elegant group dining experience.", "tags": ["dinner", "traditional", "Korean", "group"]}, {"id": "r010", "name": "Noryangjin Seafood Market", "location": "Seoul", "region": "Seoul", "type": "dinner", "cuisine": "Korean Seafood", "description": "Famous wholesale seafood market where you can select live seafood and have it cooked on-site. Unique dining experience for groups.", "tags": ["dinner", "seafood", "market", "unique"]}, {"id": "r011", "name": "Goryeo Samgyetang", "location": "Seoul", "region": "Seoul", "type": "lunch", "cuisine": "Korean Traditional", "description": "Classic ginseng chicken soup \u2014 Korea's national dish. Whole chicken stuffed with rice and ginseng. Pork-free option available.", "tags": ["lunch", "halal-friendly", "traditional", "Seoul"]}, {"id": "r012", "name": "Jeju Ttukbaegi", "location": "Jeju", "region": "Jeju", "type": "lunch", "cuisine": "Korean Claypot", "description": "Traditional Korean claypot cuisine featuring fresh Jeju local ingredients. Warm and hearty lunch option on Jeju Island.", "tags": ["lunch", "Jeju", "claypot", "traditional"]}, {"id": "r013", "name": "Chaeum Hanjeongsik", "location": "Seoul", "region": "Seoul", "type": "lunch/dinner", "cuisine": "Korean Traditional", "description": "Hanjeongsik set restaurant offering traditional Korean full-course meals. Suitable for corporate and group dining.", "tags": ["lunch", "dinner", "traditional", "corporate"]}, {"id": "r014", "name": "Sukseongbushim Aging Pork BBQ", "location": "Seoul", "region": "Seoul", "type": "dinner", "cuisine": "Korean BBQ", "description": "Specializing in aged pork BBQ. Premium grilled meat experience popular with tour groups.", "tags": ["dinner", "BBQ", "pork", "Seoul"]}, {"id": "r015", "name": "Olle Market Food Stalls", "location": "Seogwipo, Jeju", "region": "Jeju", "type": "casual", "cuisine": "Jeju Street Food", "description": "Seogwipo Olle Market street foods: black pork skewers, tangerine desserts, and fresh seafood snacks. Ideal for casual group strolls and snacking.", "tags": ["street food", "Jeju", "casual", "market"]}], "hotels": [{"id": "h001", "name": "Courtyard by Marriott Seoul Namdaemun", "location": "Seoul", "region": "Seoul", "stars": 4, "type": "International", "description": "International 4-star hotel in central Seoul near Namdaemun market. Popular with inbound tour groups.", "tags": ["4-star", "Seoul", "international"]}, {"id": "h002", "name": "Migliore Hotel Seoul Myeongdong", "location": "Seoul", "region": "Seoul", "stars": 5, "type": "Local", "description": "Local 5-star hotel in Myeongdong, Seoul's premier shopping district. Convenient for shopping and dining.", "tags": ["5-star", "Seoul", "Myeongdong"]}, {"id": "h003", "name": "Novotel Ambassador Seoul Dongdaemun", "location": "Seoul", "region": "Seoul", "stars": 5, "type": "International", "description": "International 5-star hotel in Dongdaemun, Seoul. Modern amenities and convenient location.", "tags": ["5-star", "Seoul", "international"]}, {"id": "h004", "name": "Lotte City Hotel Myeongdong", "location": "Seoul", "region": "Seoul", "stars": 4, "type": "Local", "description": "Located in the heart of Myeongdong. Part of the Lotte group with reliable quality for tour groups.", "tags": ["4-star", "Seoul", "Myeongdong"]}, {"id": "h005", "name": "Royal Hotel Seoul", "location": "Seoul", "region": "Seoul", "stars": 4, "type": "Local", "description": "Classic Seoul hotel with long history. Central location suitable for tour groups throughout the year.", "tags": ["4-star", "Seoul", "central"]}, {"id": "h006", "name": "Jeju Maison Glad Hotel", "location": "Jeju City", "region": "Jeju", "stars": 5, "type": "Local", "description": "Local 5-star hotel in Jeju City. Premium amenities and Jeju's iconic hospitality.", "tags": ["5-star", "Jeju", "luxury"]}, {"id": "h007", "name": "Jeju Shalom Hotel", "location": "Jeju", "region": "Jeju", "stars": 4, "type": "Local", "description": "4-star hotel in Jeju offering comfortable accommodations for tour groups.", "tags": ["4-star", "Jeju"]}, {"id": "h008", "name": "Jeju Nanta Hotel", "location": "Jeju", "region": "Jeju", "stars": 4, "type": "Local", "description": "4-star hotel in Jeju. Convenient for island touring with reliable group facilities.", "tags": ["4-star", "Jeju"]}, {"id": "h009", "name": "Jeju Sun Hotel", "location": "Jeju City", "region": "Jeju", "stars": 5, "type": "Local", "description": "Local 5-star hotel in Jeju City. Popular with larger inbound groups. Features casino facilities.", "tags": ["5-star", "Jeju", "casino"]}, {"id": "h010", "name": "Alpensia Ski Resort Holiday Inn", "location": "Gangwon", "region": "Gangwon", "stars": 4, "type": "International", "description": "Ski-in ski-out resort hotel at Alpensia. Ideal for ski tour packages in Gangwon province.", "tags": ["4-star", "Gangwon", "ski"]}, {"id": "h011", "name": "Yongpyeong Resort", "location": "Gangwon", "region": "Gangwon", "stars": 4, "type": "Local", "description": "Korea's premier ski resort hotel. Direct access to slopes and mountain facilities.", "tags": ["4-star", "Gangwon", "ski"]}, {"id": "h012", "name": "Lotte Hotel Busan", "location": "Busan", "region": "Busan", "stars": 5, "type": "International", "description": "Flagship Lotte property in Busan. Excellent location and facilities for large tour groups.", "tags": ["5-star", "Busan", "international"]}, {"id": "h013", "name": "Fairfield by Marriott Songdo Busan", "location": "Busan", "region": "Busan", "stars": 4, "type": "International", "description": "100% ocean view hotel in Songdo Beach area. Modern Marriott brand quality in Busan.", "tags": ["4-star", "Busan", "ocean view"]}, {"id": "h014", "name": "Novotel Ambassador Seoul Yongsan", "location": "Seoul", "region": "Seoul", "stars": 5, "type": "International", "description": "International 5-star hotel in Yongsan, Seoul. Modern amenities with easy access to transit.", "tags": ["5-star", "Seoul", "international"]}, {"id": "h015", "name": "Jeju Shilla Stay Hotel", "location": "Jeju", "region": "Jeju", "stars": 4, "type": "Local", "description": "Shilla Stay brand in Jeju. Reliable quality and comfortable rooms for tour groups.", "tags": ["4-star", "Jeju"]}], "clients": [{"id": "c001", "name": "Cruise Travel", "contact": "Linda Lim", "email": "linda@cruisetravel.sg", "phone": "", "country": "Singapore", "currency": "SGD", "notes": "Large group specialist \u2014 450 pax Jeju cruise group"}, {"id": "c002", "name": "Cruise Travel", "contact": "Eileen Lim", "email": "", "phone": "", "country": "Singapore", "currency": "USD", "notes": "Small group specialist \u2014 mothers trip 10 pax"}, {"id": "c003", "name": "Chan Brothers", "contact": "", "email": "", "phone": "", "country": "Singapore", "currency": "SGD", "notes": "Regular client \u2014 multiple Seoul group tours 25-30 pax"}, {"id": "c004", "name": "BMC Travel", "contact": "Meddy", "email": "meddy@bmctravel.com", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "Large group \u2014 200 pax ski tour"}, {"id": "c005", "name": "Supreme Travel & Tour", "contact": "Mr. Perry Pek", "email": "", "phone": "", "country": "Singapore", "currency": "SGD", "notes": "Ski + Seoul packages"}, {"id": "c006", "name": "Mayflower Corporate", "contact": "", "email": "", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "Corporate travel \u2014 30 pax Seoul"}, {"id": "c007", "name": "Orex Travel & Tours", "contact": "", "email": "", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "FIT small group 4 pax Busan-Seoul"}, {"id": "c008", "name": "Best Tour EU-US", "contact": "Kerry Chai", "email": "kerrychay@bestoureuus.com", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "LG corporate tour specialist"}, {"id": "c009", "name": "Mega Air Travel", "contact": "Lucas Siew", "email": "", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "Busan specialist \u2014 30 pax groups"}, {"id": "c010", "name": "LGE Travel", "contact": "Zane Neo", "email": "", "phone": "", "country": "Singapore", "currency": "SGD", "notes": "Jeju groups 40+ pax"}, {"id": "c011", "name": "Kenanga Investors Berhad", "contact": "", "email": "", "phone": "", "country": "Malaysia", "currency": "USD", "notes": "Corporate incentive travel"}], "transport": [{"id": "t001", "type": "45-seat Deluxe Coach", "description": "Standard group coach with driver and licensed tour guide. Used for groups 25-45 pax.", "capacity": 45}, {"id": "t002", "type": "25-seat Coach", "description": "Mid-size coach for smaller groups with driver and tour guide.", "capacity": 25}, {"id": "t003", "type": "Hyundai Solati Van", "description": "13-seat van for small groups. Includes driver and English-speaking tour guide.", "capacity": 13}, {"id": "t004", "type": "KTX Train", "description": "Korea's high-speed rail \u2014 Seoul to Busan approximately 2.5 hours. Ideal for multi-city itineraries.", "capacity": 0}, {"id": "t005", "type": "2 \u00d7 45-seat Deluxe Coach", "description": "Two coaches for large groups (46-90 pax). Each with dedicated driver and guide.", "capacity": 90}], "meta": {"lastUpdated": "2025-04-27", "nextKSNumber": 132, "version": "1.0"}};
+ 
 initApp();
 </script>
 </body>
